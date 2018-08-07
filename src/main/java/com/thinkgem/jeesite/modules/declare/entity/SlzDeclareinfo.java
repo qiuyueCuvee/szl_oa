@@ -3,9 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.declare.entity;
 
-import com.thinkgem.jeesite.modules.sys.entity.User;
 import org.hibernate.validator.constraints.Length;
-
 import com.thinkgem.jeesite.common.persistence.DataEntity;
 
 /**
@@ -26,8 +24,6 @@ public class SlzDeclareinfo extends DataEntity<SlzDeclareinfo> {
 	private String declareRemark;		// 备注
 	private String declareStatus;		// 申报单状态
 	private String statusReason;		// 原因
-	//private String userId;		// 操作人id
-	private User user;		// 操作用户
 	
 	public SlzDeclareinfo() {
 		super();
@@ -127,12 +123,5 @@ public class SlzDeclareinfo extends DataEntity<SlzDeclareinfo> {
 		this.statusReason = statusReason;
 	}
 	
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
 	
 }

@@ -67,7 +67,6 @@
 				<th>备注</th>
 				<th>申报单状态</th>
 				<th>状态原因</th>
-				<th>操作人</th>
 				<shiro:hasPermission name="declare:slzDeclareinfo:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -103,9 +102,6 @@
 				</td>
 				<td>
 					${slzDeclareinfo.statusReason}
-				</td>
-				<td>
-					${slzDeclareinfo.user.name}
 				</td>
 				<c:if  test="${slzDeclareinfo.declareStatus == '1'}" >
 					<shiro:hasPermission name="declare:slzDeclareinfo:edit"><td>

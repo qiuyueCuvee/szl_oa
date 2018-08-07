@@ -66,7 +66,6 @@
 				<th>备注</th>
 				<th>申报单状态</th>
 				<th>状态原因</th>
-				<th>操作人</th>
 				<shiro:hasPermission name="declare:slzDeclareinfo:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -103,12 +102,20 @@
 				<td>
 					${slzDeclareinfo.statusReason}
 				</td>
-				<td>
-					${slzDeclareinfo.user.name}
-				</td>
 				<shiro:hasPermission name="declare:slzDeclareinfo:check"><td>
-					<a href="${ctx}/declare/slzDeclareinfo/pass?id=${slzDeclareinfo.id}" onclick="return confirmx('确认要通过该申报信息吗？', this.href)">通过</a>
-    				<a href="${ctx}/declare/slzDeclareinfo/goout?id=${slzDeclareinfo.id}">驳回</a>
+				
+					<c:choose>  
+					   <c:when test="${slzDeclareinfo.declareStatus == '3'}" >      
+						 <a href="${ctx}/declare/slzDeclareinfo/pass?id=${slzDeclareinfo.id}" onclick="return confirmx('确认要通过该申报信息吗？', this.href)">通过</a>
+					   </c:when>  
+					   <c:when test="${slzDeclareinfo.declareStatus == '2'}" >      
+    					 <a href="${ctx}/declare/slzDeclareinfo/goout?id=${slzDeclareinfo.id}">驳回</a>
+					   </c:when>  
+					   <c:otherwise>  
+						 <a href="${ctx}/declare/slzDeclareinfo/pass?id=${slzDeclareinfo.id}" onclick="return confirmx('确认要通过该申报信息吗？', this.href)">通过</a>
+    					 <a href="${ctx}/declare/slzDeclareinfo/goout?id=${slzDeclareinfo.id}">驳回</a>
+					   </c:otherwise>  
+					</c:choose> 
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

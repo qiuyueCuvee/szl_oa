@@ -3,8 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.declare.web;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,8 +24,6 @@ import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.declare.entity.SlzDeclareinfo;
 import com.thinkgem.jeesite.modules.declare.service.SlzDeclareinfoService;
-import com.thinkgem.jeesite.modules.sys.entity.User;
-import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
  * declareController
@@ -60,7 +58,7 @@ public class SlzDeclareinfoController extends BaseController {
 	}
 	
 	@RequiresPermissions("declare:slzDeclareinfo:view")
-	@RequestMapping(value = {"check", ""})
+	@RequestMapping(value = "check")
 	public String check(SlzDeclareinfo slzDeclareinfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SlzDeclareinfo> page = slzDeclareinfoService.findPage(new Page<SlzDeclareinfo>(request, response), slzDeclareinfo); 
 		model.addAttribute("page", page);
@@ -82,9 +80,6 @@ public class SlzDeclareinfoController extends BaseController {
 		if (!beanValidator(model, slzDeclareinfo)){
 			return form(slzDeclareinfo, model);
 		}
-		
-		User user=UserUtils.getUser();
-		slzDeclareinfo.setUser(user);		
 		slzDeclareinfo.setDeclareStatus("1");		
 		slzDeclareinfo.setStatusReason("该单据已经生成，等待管理员审核！");	
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
@@ -102,7 +97,7 @@ public class SlzDeclareinfoController extends BaseController {
 		slzDeclareinfo.setStatusReason("该单据已经通过管理员审核！");		
 		slzDeclareinfoService.update(slzDeclareinfo);
 		addMessage(redirectAttributes, "通过申报信息成功！");
-		return "redirect:"+Global.getAdminPath()+"/declare/slzDeclareinfo/?repage";
+		return "redirect:"+Global.getAdminPath()+"/declare/slzDeclareinfo/check/?repage";
 	}
 	
 	@RequiresPermissions("declare:slzDeclareinfo:check")
@@ -117,7 +112,7 @@ public class SlzDeclareinfoController extends BaseController {
 		slzDeclareinfo.setDeclareStatus("3");		
 		slzDeclareinfoService.update(slzDeclareinfo);
 		addMessage(redirectAttributes, "驳回申报信息成功！");
-		return "redirect:"+Global.getAdminPath()+"/declare/slzDeclareinfo/?repage";
+		return "redirect:"+Global.getAdminPath()+"/declare/slzDeclareinfo/check/?repage";
 	}
 	
 	@RequiresPermissions("declare:slzDeclareinfo:edit")
