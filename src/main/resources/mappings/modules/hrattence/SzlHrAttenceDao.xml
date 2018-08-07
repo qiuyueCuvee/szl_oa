@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hrattence.dao.SzlHrAttenceDao">
+    
+	<sql id="szlHrAttenceColumns">
+		a.id AS "id",
+		a.number AS "number",
+		a.starttime AS "starttime",
+		a.endtime AS "endtime",
+		a.date AS "date",
+		a.memo AS "memo",
+		a.remark AS "remark"
+	</sql>
+	
+	<sql id="szlHrAttenceJoins">
+	</sql>
+    
+	<select id="get" resultType="SzlHrAttence">
+		SELECT 
+			<include refid="szlHrAttenceColumns"/>
+		FROM szl_hr_attence a
+		<include refid="szlHrAttenceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SzlHrAttence">
+		SELECT 
+			<include refid="szlHrAttenceColumns"/>
+		FROM szl_hr_attence a
+		<include refid="szlHrAttenceJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SzlHrAttence">
+		SELECT 
+			<include refid="szlHrAttenceColumns"/>
+		FROM szl_hr_attence a
+		<include refid="szlHrAttenceJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO szl_hr_attence(
+			id,
+			number,
+			starttime,
+			endtime,
+			date,
+			memo,
+			remark
+		) VALUES (
+			#{id},
+			#{number},
+			#{starttime},
+			#{endtime},
+			#{date},
+			#{memo},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE szl_hr_attence SET 	
+			number = #{number},
+			starttime = #{starttime},
+			endtime = #{endtime},
+			date = #{date},
+			memo = #{memo},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM szl_hr_attence
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

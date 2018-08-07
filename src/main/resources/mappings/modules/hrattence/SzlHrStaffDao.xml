@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.hrattence.dao.SzlHrStaffDao">
+    
+	<sql id="szlHrStaffColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.number AS "number",
+		a.department AS "department"
+	</sql>
+	
+	<sql id="szlHrStaffJoins">
+	</sql>
+    
+	<select id="get" resultType="SzlHrStaff">
+		SELECT 
+			<include refid="szlHrStaffColumns"/>
+		FROM szl_hr_staff a
+		<include refid="szlHrStaffJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SzlHrStaff">
+		SELECT 
+			<include refid="szlHrStaffColumns"/>
+		FROM szl_hr_staff a
+		<include refid="szlHrStaffJoins"/>
+		<where>
+			
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SzlHrStaff">
+		SELECT 
+			<include refid="szlHrStaffColumns"/>
+		FROM szl_hr_staff a
+		<include refid="szlHrStaffJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO szl_hr_staff(
+			id,
+			name,
+			number,
+			department
+		) VALUES (
+			#{id},
+			#{name},
+			#{number},
+			#{department}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE szl_hr_staff SET 	
+			name = #{name},
+			number = #{number},
+			department = #{department}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM szl_hr_staff
+		WHERE id = #{id}
+	</update>
+	
+	<select id="findByNumber" parameterType="java.lang.String" resultType="SzlHrStaff">
+		SELECT *
+		FROM szl_hr_staff where number=#{number};
+	</select>
+</mapper>
