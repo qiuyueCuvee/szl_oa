@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.psw.dao.SlzPswinfoDao">
+    
+	<sql id="slzPswinfoColumns">
+		a.id AS "id",
+		a.password AS "password",
+		a.desc AS "desc"
+	</sql>
+	
+	<sql id="slzPswinfoJoins">
+	</sql>
+    
+	<select id="get" resultType="SlzPswinfo">
+		SELECT 
+			<include refid="slzPswinfoColumns"/>
+		FROM slz_pswinfo a
+		<include refid="slzPswinfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SlzPswinfo">
+		SELECT 
+			<include refid="slzPswinfoColumns"/>
+		FROM slz_pswinfo a
+		<include refid="slzPswinfoJoins"/>
+		<where>
+			
+			<if test="desc != null and desc != ''">
+				AND a.desc LIKE 
+					<if test="dbName == 'oracle'">'%'||#{desc}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{desc}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{desc},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SlzPswinfo">
+		SELECT 
+			<include refid="slzPswinfoColumns"/>
+		FROM slz_pswinfo a
+		<include refid="slzPswinfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO slz_pswinfo(
+			`password`,
+			`desc`
+		) VALUES (
+			#{password},
+			#{desc}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE slz_pswinfo SET 	
+			`password` = #{password},
+			`desc` = #{desc}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM slz_pswinfo
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
