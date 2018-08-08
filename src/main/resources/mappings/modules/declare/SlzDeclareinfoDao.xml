@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.declare.dao.SlzDeclareinfoDao">
+    
+	<sql id="slzDeclareinfoColumns">
+		a.id AS "id",
+		a.declare_dept AS "declareDept",
+		a.declare_name AS "declareName",
+		a.declare_phone AS "declarePhone",
+		a.declare_time AS "declareTime",
+		a.declare_goods AS "declareGoods",
+		a.goods_use AS "goodsUse",
+		a.reference_url AS "referenceUrl",
+		a.declare_remark AS "declareRemark",
+		a.declare_status AS "declareStatus",
+		a.status_reason AS "statusReason",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="slzDeclareinfoJoins">
+	</sql>
+    
+	<select id="get" resultType="SlzDeclareinfo">
+		SELECT 
+			<include refid="slzDeclareinfoColumns"/>
+		FROM slz_declareinfo a
+		<include refid="slzDeclareinfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SlzDeclareinfo">
+		SELECT 
+			<include refid="slzDeclareinfoColumns"/>
+		FROM slz_declareinfo a
+		<include refid="slzDeclareinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="declareDept != null and declareDept != ''">
+				AND a.declare_dept LIKE 
+					<if test="dbName == 'oracle'">'%'||#{declareDept}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{declareDept}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{declareDept},'%')</if>
+			</if>
+			<if test="declareName != null and declareName != ''">
+				AND a.declare_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{declareName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{declareName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{declareName},'%')</if>
+			</if>
+			<if test="declareTime != null and declareTime != ''">
+				AND a.declare_time = #{declareTime}
+			</if>
+			<if test="declareGoods != null and declareGoods != ''">
+				AND a.declare_goods LIKE 
+					<if test="dbName == 'oracle'">'%'||#{declareGoods}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{declareGoods}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{declareGoods},'%')</if>
+			</if>
+			<if test="declareStatus != null and declareStatus != ''">
+				AND a.declare_status LIKE 
+					<if test="dbName == 'oracle'">'%'||#{declareStatus}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{declareStatus}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{declareStatus},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SlzDeclareinfo">
+		SELECT 
+			<include refid="slzDeclareinfoColumns"/>
+		FROM slz_declareinfo a
+		<include refid="slzDeclareinfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO slz_declareinfo(
+			declare_dept,
+			declare_name,
+			declare_phone,
+			declare_time,
+			declare_goods,
+			goods_use,
+			reference_url,
+			declare_remark,
+			declare_status,
+			status_reason,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag
+		) VALUES (
+			#{declareDept},
+			#{declareName},
+			#{declarePhone},
+			#{declareTime},
+			#{declareGoods},
+			#{goodsUse},
+			#{referenceUrl},
+			#{declareRemark},
+			#{declareStatus},
+			#{statusReason},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE slz_declareinfo SET 	
+			declare_dept = #{declareDept},
+			declare_name = #{declareName},
+			declare_phone = #{declarePhone},
+			declare_goods = #{declareGoods},
+			goods_use = #{goodsUse},
+			reference_url = #{referenceUrl},
+			declare_remark = #{declareRemark},
+			declare_status = #{declareStatus},
+			status_reason = #{statusReason},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE slz_declareinfo SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
