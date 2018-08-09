@@ -5,6 +5,9 @@ package com.thinkgem.jeesite.modules.hrattence.entity;
 
 import org.hibernate.validator.constraints.Length;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.thinkgem.jeesite.common.persistence.DataEntity;
@@ -31,6 +34,11 @@ public class SzlHrAttence extends DataEntity<SzlHrAttence> {
 	
 	private  String  hrStaffName ;
 	private  String  hrStaffDept ;
+	
+	private String html;
+	
+	private List<HashMap> calendarMapList;
+	private String status;
 	
 	public SzlHrAttence() {
 		super();
@@ -138,6 +146,30 @@ public class SzlHrAttence extends DataEntity<SzlHrAttence> {
 
 	public void setHrStaffDept(String hrStaffDept) {
 		this.hrStaffDept = hrStaffDept;
+	}
+
+	public String getHtml() {
+		return html;
+	}
+
+	public void setHtml(String html) {
+		this.html = html;
+	}
+
+	public List<HashMap> getCalendarMapList() {
+		return calendarMapList;
+	}
+
+	public void setCalendarMapList(List<HashMap> calendarMapList) {
+		this.calendarMapList = calendarMapList;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	
