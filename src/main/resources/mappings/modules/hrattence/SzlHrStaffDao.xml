@@ -91,4 +91,9 @@
 		SELECT *
 		FROM szl_hr_staff where number=#{number};
 	</select>
+	
+	<select id="findstaff" parameterType="java.lang.String" resultType="SzlHrStaff">
+		SELECT *
+		FROM szl_hr_staff ;
+	</select>
 </mapper>

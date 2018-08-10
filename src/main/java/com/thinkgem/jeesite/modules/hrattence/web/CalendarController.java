@@ -1,7 +1,9 @@
 package com.thinkgem.jeesite.modules.hrattence.web;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +33,12 @@ public class CalendarController extends BaseController{
 	private SzlHrAttenceService attenceService;
 	
 	@RequestMapping(value = "list")
-	public String list(SzlHrAttence szlHrAttence,HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<SzlHrAttence> result= attenceService.findAllPage(new Page<SzlHrAttence>(request, response), szlHrAttence);
-		List<SzlHrAttence> list = result.getList();
+	public String list(SzlHrAttence szlHrAttence,HttpServletRequest request, HttpServletResponse response, Model model) throws ParseException {
+//		Page<SzlHrAttence> result= attenceService.findMonthPage(new Page<SzlHrAttence>(request, response), szlHrAttence);
+//		List<SzlHrAttence> list = result.getList();
+		List<HashMap> list = attenceService.findMonthPage(new Page<SzlHrAttence>(request, response), szlHrAttence);
 		Map calendarMap = new HashMap();
-		for(SzlHrAttence entity:list) {
+		/*for(SzlHrAttence entity:list) {
 			SzlHrStaff hhrStaff = new SzlHrStaff();
 			hhrStaff.setNumber(entity.getNumber());
 			SzlHrStaff staff =  null;
@@ -46,7 +49,7 @@ public class CalendarController extends BaseController{
 			if(staff!=null) {
 				entity.setHrStaffName(staff.getName());
 			}
-		}
+		}*/
 		
 		StringBuffer html = new StringBuffer();
 		html.append("<tr>\r\n");
@@ -55,6 +58,7 @@ public class CalendarController extends BaseController{
 		Calendar c = Calendar.getInstance();
 //		int month = c.get(Calendar.MONTH);
 		c.add(Calendar.MONTH, -1);
+		c.add(Calendar.DATE, 26);
 		
 		int maxCols = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
@@ -75,12 +79,30 @@ public class CalendarController extends BaseController{
 		html.append("<th>实际出勤天数</th>");
 		html.append("<th>签字确认</th>");
 		html.append("</tr>\r\n");
+		for(HashMap map:list) {
+			Iterator iter = map.entrySet().iterator();
+			while (iter.hasNext()) {
+			Map.Entry entry = (Map.Entry) iter.next();
+			Object key = entry.getKey();
+			html.append("<tr><td>");
+			html.append(key);
+			html.append("</td>");
+			List<SzlHrAttence> val = (List<SzlHrAttence>)entry.getValue();
+				for(SzlHrAttence obj:val) {
+					html.append("<td>");
+					html.append(obj.getStatus());
+					html.append("</td>");
+				}
+				html.append("</tr>");
+			}
+			
+		}
 		
 		
 		szlHrAttence.setHtml(html.toString());
 //		szlHrAttence.setCalendarMap(null);
 //		model.addAttribute("szlHrAttence", szlHrAttence);
-		model.addAttribute("page", result);
+		model.addAttribute("list", list);
 		return "modules/hrattence/calendarList";
 		
 	}

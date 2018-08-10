@@ -37,8 +37,11 @@ public class SzlHrAttence extends DataEntity<SzlHrAttence> {
 	
 	private String html;
 	
-	private List<HashMap> calendarMapList;
+//	private List<HashMap> calendarMapList;
 	private String status;
+	
+	private String begindate;
+	private String enddate;
 	
 	public SzlHrAttence() {
 		super();
@@ -155,14 +158,14 @@ public class SzlHrAttence extends DataEntity<SzlHrAttence> {
 	public void setHtml(String html) {
 		this.html = html;
 	}
-
+/*
 	public List<HashMap> getCalendarMapList() {
 		return calendarMapList;
 	}
 
 	public void setCalendarMapList(List<HashMap> calendarMapList) {
 		this.calendarMapList = calendarMapList;
-	}
+	}*/
 
 	public String getStatus() {
 		return status;
@@ -171,6 +174,21 @@ public class SzlHrAttence extends DataEntity<SzlHrAttence> {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
+
+	public String getBegindate() {
+		return begindate;
+	}
+
+	public void setBegindate(String begindate) {
+		this.begindate = begindate;
+	}
+
+	public String getEnddate() {
+		return enddate;
+	}
+
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
+
 }
