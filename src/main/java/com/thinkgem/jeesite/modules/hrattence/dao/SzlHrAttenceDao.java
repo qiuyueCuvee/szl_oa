@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.hrattence.dao;
 
+import java.util.List;
+
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrAttence;
@@ -14,5 +16,7 @@ import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrAttence;
  */
 @MyBatisDao
 public interface SzlHrAttenceDao extends CrudDao<SzlHrAttence> {
+	
+	public List<SzlHrAttence> findMonthList(SzlHrAttence entity);
 	
 }

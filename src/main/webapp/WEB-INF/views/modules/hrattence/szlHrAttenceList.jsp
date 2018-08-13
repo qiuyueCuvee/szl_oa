@@ -21,16 +21,18 @@
 		<li class="active"><a href="${ctx}/hrattence/szlHrAttence/">考勤异常列表</a></li>
 		<%-- <shiro:hasPermission name="hrattence:szlHrAttence:edit"><li><a href="${ctx}/hrattence/szlHrAttence/form">hrattence添加</a></li></shiro:hasPermission> --%>
 	</ul>
-	<%-- <form:form id="searchForm" modelAttribute="szlHrAttence" action="${ctx}/hrattence/szlHrAttence/" method="post" class="breadcrumb form-search">
+	 <form:form id="searchForm" modelAttribute="szlHrAttence" action="${ctx}/hrattence/szlHrAttence/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<!-- <ul class="ul-form">
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
-		</ul> -->
-	</form:form> --%>
+		</ul>  -->
+	</form:form>
+	
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
+	
 		<thead>
 			<tr>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>工号</th></shiro:hasPermission>
@@ -50,7 +52,7 @@
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="szlHrAttence">
-		<c:if test="${szlHrAttence.sum > 0}">
+		<%-- <c:if test="${szlHrAttence.sum > 0}"> --%>
 			<tr>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><td>
     				${szlHrAttence.number}
@@ -90,7 +92,7 @@
 					<%-- <a href="${ctx}/hrattence/szlHrAttence/delete?id=${szlHrAttence.id}" onclick="return confirmx('确认要删除该hrattence吗？', this.href)">删除</a> --%>
 				</td></shiro:hasPermission>
 			</tr>
-			</c:if>
+		<%-- 	</c:if> --%>
 		</c:forEach>
 		</tbody>
 	</table>

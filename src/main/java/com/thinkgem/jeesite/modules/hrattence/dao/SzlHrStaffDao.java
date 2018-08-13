@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.hrattence.dao;
 
+import java.util.List;
+
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrStaff;
@@ -16,4 +18,6 @@ import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrStaff;
 public interface SzlHrStaffDao extends CrudDao<SzlHrStaff> {
 	
 	public SzlHrStaff findByNumber(String number);
+	
+	public List<SzlHrStaff> findstaff();
 }
