@@ -29,7 +29,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/declare/slzDeclareinfo/">申报信息列表</a></li>
-		<li class="active"><a href="${ctx}/declare/slzDeclareinfo/out?id=${slzDeclareinfo.id}">申报信息驳回<shiro:lacksPermission name="declare:slzDeclareinfo:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/declare/slzDeclareinfo/out?id=${slzDeclareinfo.id}">申报信息驳回</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="slzDeclareinfo" action="${ctx}/declare/slzDeclareinfo/out" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
@@ -79,12 +79,12 @@
 		<div class="control-group">
 			<label class="control-label">驳回原因：</label>
 			<div class="controls">
-				<form:textarea id="statusReason" path="statusReason" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge " disabled="disabled"/>
+				<form:textarea id="statusReason" path="statusReason" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge " />
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="declare:slzDeclareinfo:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="驳 回"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="declare:slzDeclareinfo:check"><input id="btnSubmit" class="btn btn-primary" type="submit" value="驳 回"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>

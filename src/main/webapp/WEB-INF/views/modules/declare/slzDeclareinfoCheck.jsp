@@ -103,7 +103,6 @@
 					${slzDeclareinfo.statusReason}
 				</td>
 				<shiro:hasPermission name="declare:slzDeclareinfo:check"><td>
-				
 					<c:choose>  
 					   <c:when test="${slzDeclareinfo.declareStatus == '3'}" >      
 						 <a href="${ctx}/declare/slzDeclareinfo/pass?id=${slzDeclareinfo.id}" onclick="return confirmx('确认要通过该申报信息吗？', this.href)">通过</a>
