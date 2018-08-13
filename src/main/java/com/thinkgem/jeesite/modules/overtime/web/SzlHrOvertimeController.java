@@ -105,6 +105,7 @@ public class SzlHrOvertimeController extends BaseController {
 	@RequestMapping(value = "goout")
 	public String goout(SzlHrOvertime szlHrOvertime, Model model) {
 		model.addAttribute("szlHrOvertime", szlHrOvertime);
+		
 		return "modules/overtime/szlHrOvertimeOut";
 	}
 	@RequiresPermissions("overtime:szlHrOvertime:check")
