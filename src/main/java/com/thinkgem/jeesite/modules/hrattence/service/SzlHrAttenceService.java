@@ -174,8 +174,12 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		}
 		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
 		if(stafflist.size()>30) {
-			stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(), page.getPageNo()*page.getPageSize());
-		}
+			if(page.getPageNo()*page.getPageSize()>stafflist.size()) {
+				stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(),stafflist.size());
+			}else {
+				stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(), page.getPageNo()*page.getPageSize());
+				}
+			}
 		
 		List<HashMap> maplist = new ArrayList<HashMap>();
 		for(SzlHrStaff element:stafflist) {
