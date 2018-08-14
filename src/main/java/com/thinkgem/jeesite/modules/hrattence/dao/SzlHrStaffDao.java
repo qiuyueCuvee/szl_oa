@@ -19,5 +19,5 @@ public interface SzlHrStaffDao extends CrudDao<SzlHrStaff> {
 	
 	public SzlHrStaff findByNumber(String number);
 	
-	public List<SzlHrStaff> findstaff();
+	public List<SzlHrStaff> findstaff(SzlHrStaff staff);
 }

@@ -21,13 +21,16 @@
 		<li class="active"><a href="${ctx}/hrattence/szlHrAttence/">考勤异常列表</a></li>
 		<%-- <shiro:hasPermission name="hrattence:szlHrAttence:edit"><li><a href="${ctx}/hrattence/szlHrAttence/form">hrattence添加</a></li></shiro:hasPermission> --%>
 	</ul>
-	 <form:form id="searchForm" modelAttribute="szlHrAttence" action="${ctx}/hrattence/szlHrAttence/" method="post" class="breadcrumb form-search">
+	 <form:form id="searchForm" modelAttribute="szlHrAttence" action="${ctx}/hrattence/szlHrAttence/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		<!-- <ul class="ul-form">
+		 <ul class="ul-form">
+		 <li><label>工号：</label>
+				<form:input path="number" htmlEscape="false" maxlength="255" class="input-medium"/>
+			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
-		</ul>  -->
+		</ul>   
 	</form:form>
 	
 	<sys:message content="${message}"/>

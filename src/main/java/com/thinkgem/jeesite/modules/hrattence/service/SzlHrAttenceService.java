@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,10 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		return super.findList(szlHrAttence);
 	}
 	
+	public List<SzlHrAttence> findAllMonthList(SzlHrAttence szlHrAttence) {
+		return attencedao.findAllMonthList(szlHrAttence);
+	}
+	
 	public Page<SzlHrAttence> findPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence) {
 		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
 //		List<SzlHrAttence> list = result.getList();
@@ -61,7 +67,11 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		d.set(Calendar.DAY_OF_MONTH, 25);
 		String enddate =  dfst.format(d.getTime());
 		
-			
+		/*SzlHrAttence attence	= new SzlHrAttence();
+		attence.setBegindate(begindate);
+		attence.setEnddate(enddate);*/
+//		List<SzlHrAttence> attencelist = attencedao.findAllMonthList(attence);
+		
 		szlHrAttence.setBegindate(begindate);
 		szlHrAttence.setEnddate(enddate);
 		List<SzlHrAttence> list = attencedao.findAllMonthList(szlHrAttence);
@@ -128,6 +138,10 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 						 if(!"0".equals(entity.getSum())) {
 							reslist.add(entity);
 						} 
+						/* if("0".equals(entity.getSum())) {
+							 attencelist.remove(entity);
+							}*/
+						 
 				  }
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -136,10 +150,11 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		   
 		}
 		result.setList(reslist);
+//		result.setCount(attencelist.size());
 		return result;
 	}
 	
-	public List<HashMap> findMonthPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence) throws ParseException {
+	public List<HashMap> findMonthPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
 //		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
 //		List<SzlHrAttence> list = result.getList();
 		Calendar c = Calendar.getInstance();
@@ -152,8 +167,16 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		d.add(Calendar.MONTH, -2);
 		d.set(Calendar.DAY_OF_MONTH, 25);
 		String enddate =  dfst.format(d.getTime());
+//		SzlHrStaff paramstaff = new SzlHrStaff();
+//		paramstaff.setNumber(request.getParameter("number"));
+		if("0000".equals(szlHrStaff.getNumber())) {
+			szlHrStaff=null;
+		}
+		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
+		if(stafflist.size()>30) {
+			stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(), page.getPageNo()*page.getPageSize());
+		}
 		
-		List<SzlHrStaff> stafflist = staffdao.findstaff();
 		List<HashMap> maplist = new ArrayList<HashMap>();
 		for(SzlHrStaff element:stafflist) {
 			

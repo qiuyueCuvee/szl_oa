@@ -3,6 +3,10 @@
  */
 package com.thinkgem.jeesite.modules.hrattence.web;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,6 +54,25 @@ public class SzlHrAttenceController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SzlHrAttence szlHrAttence, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrAttence> page = szlHrAttenceService.findPage(new Page<SzlHrAttence>(request, response), szlHrAttence); 
+		/*Page<SzlHrAttence> result=  new Page<SzlHrAttence>(request, response) ;
+		SzlHrAttence attence = new SzlHrAttence();
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, -3);
+		c.set(Calendar.DAY_OF_MONTH, 26);
+	
+		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
+		String begindate = dfst.format(c.getTime());
+		Calendar d = Calendar.getInstance();
+		d.add(Calendar.MONTH, -2);
+		d.set(Calendar.DAY_OF_MONTH, 25);
+		String enddate =  dfst.format(d.getTime());
+		
+			
+		attence.setBegindate(begindate);
+		attence.setEnddate(enddate);
+		List<SzlHrAttence> list = szlHrAttenceService.findAllMonthList(attence);
+		result.setCount(list.size());
+		result.setList(page.getList());*/
 		model.addAttribute("page", page);
 		return "modules/hrattence/szlHrAttenceList";
 	}

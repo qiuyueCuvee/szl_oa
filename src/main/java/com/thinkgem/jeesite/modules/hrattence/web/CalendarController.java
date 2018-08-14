@@ -34,9 +34,16 @@ public class CalendarController extends BaseController{
 	
 	@RequestMapping(value = "list")
 	public String list(SzlHrAttence szlHrAttence,HttpServletRequest request, HttpServletResponse response, Model model) throws ParseException {
-//		Page<SzlHrAttence> result= attenceService.findMonthPage(new Page<SzlHrAttence>(request, response), szlHrAttence);
+		Page<SzlHrAttence> result=  new Page<SzlHrAttence>(request, response) ;
+		SzlHrStaff paramstaff = new SzlHrStaff();
+		if(!"0000".equals(szlHrAttence.getNumber())) {
+			paramstaff.setNumber(szlHrAttence.getNumber());
+		}
+		
+		List<SzlHrStaff> stafflist = staffdao.findstaff(paramstaff);
+		result.setCount(stafflist.size());
 //		List<SzlHrAttence> list = result.getList();
-		List<HashMap> list = attenceService.findMonthPage(new Page<SzlHrAttence>(request, response), szlHrAttence);
+		List<HashMap> list = attenceService.findMonthPage(new Page<SzlHrAttence>(request, response), szlHrAttence,paramstaff,request);
 		Map calendarMap = new HashMap();
 		/*for(SzlHrAttence entity:list) {
 			SzlHrStaff hhrStaff = new SzlHrStaff();
@@ -88,6 +95,7 @@ public class CalendarController extends BaseController{
 			html.append(key);
 			html.append("</td>");
 			List<SzlHrAttence> val = (List<SzlHrAttence>)entry.getValue();
+			result.setList(val);
 				for(SzlHrAttence obj:val) {
 					html.append("<td>");
 					html.append(obj.getStatus());
@@ -101,8 +109,8 @@ public class CalendarController extends BaseController{
 		
 		szlHrAttence.setHtml(html.toString());
 //		szlHrAttence.setCalendarMap(null);
-//		model.addAttribute("szlHrAttence", szlHrAttence);
-		model.addAttribute("list", list);
+		model.addAttribute("page", result);
+//		model.addAttribute("list", list);
 		return "modules/hrattence/calendarList";
 		
 	}
