@@ -22,8 +22,8 @@
 		<%-- <shiro:hasPermission name="hrattence:szlHrAttence:edit"><li><a href="${ctx}/hrattence/szlHrAttence/form">hrattence添加</a></li></shiro:hasPermission> --%>
 	</ul>
 	 <form:form id="searchForm" modelAttribute="szlHrAttence" action="${ctx}/hrattence/calendar/" method="post" class="breadcrumb form-search">
-		<%--  <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
-		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>  --%>
+		  <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
+		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>   
 	</form:form>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -51,7 +51,7 @@
 		</c:forEach> --%>
 		</tbody>
 	</table>
-	 <%-- <div class="pagination">${page}</div>  --%>
+	  <div class="pagination">${page}</div>   
 </body>
 </html>
 
