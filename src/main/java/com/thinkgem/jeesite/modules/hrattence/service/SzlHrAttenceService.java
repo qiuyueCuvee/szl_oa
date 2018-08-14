@@ -49,9 +49,23 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 	
 	public Page<SzlHrAttence> findPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence) {
 		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
-		List<SzlHrAttence> list = result.getList();
-//		List<SzlHrAttence> list = attencedao.findList(szlHrAttence);
-//		List<SzlHrAttence> reslist = new ArrayList<SzlHrAttence>();
+//		List<SzlHrAttence> list = result.getList();
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, -3);
+		c.set(Calendar.DAY_OF_MONTH, 26);
+	
+		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
+		String begindate = dfst.format(c.getTime());
+		Calendar d = Calendar.getInstance();
+		d.add(Calendar.MONTH, -2);
+		d.set(Calendar.DAY_OF_MONTH, 25);
+		String enddate =  dfst.format(d.getTime());
+		
+			
+		szlHrAttence.setBegindate(begindate);
+		szlHrAttence.setEnddate(enddate);
+		List<SzlHrAttence> list = attencedao.findAllMonthList(szlHrAttence);
+		List<SzlHrAttence> reslist = new ArrayList<SzlHrAttence>();
 		for(SzlHrAttence entity:list) {
 			SzlHrStaff hhrStaff = new SzlHrStaff();
 			hhrStaff.setNumber(entity.getNumber());
@@ -111,9 +125,9 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 							//sum
 							entity.setSum(String.valueOf(absenttime));
 						}
-						/*if(!"0".equals(entity.getSum())) {
+						 if(!"0".equals(entity.getSum())) {
 							reslist.add(entity);
-						}*/
+						} 
 				  }
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -121,6 +135,7 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			}
 		   
 		}
+		result.setList(reslist);
 		return result;
 	}
 	
@@ -134,7 +149,7 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
 		String begindate = dfst.format(c.getTime());
 		Calendar d = Calendar.getInstance();
-		c.add(Calendar.MONTH, -2);
+		d.add(Calendar.MONTH, -2);
 		d.set(Calendar.DAY_OF_MONTH, 25);
 		String enddate =  dfst.format(d.getTime());
 		

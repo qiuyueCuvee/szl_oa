@@ -19,4 +19,6 @@ public interface SzlHrAttenceDao extends CrudDao<SzlHrAttence> {
 	
 	public List<SzlHrAttence> findMonthList(SzlHrAttence entity);
 	
+	public List<SzlHrAttence> findAllMonthList(SzlHrAttence entity);
+	
 }

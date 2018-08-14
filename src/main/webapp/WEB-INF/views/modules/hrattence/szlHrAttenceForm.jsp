@@ -27,8 +27,8 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/hrattence/szlHrAttence/">hrattence列表</a></li>
-		<li class="active"><a href="${ctx}/hrattence/szlHrAttence/form?id=${szlHrAttence.id}">hrattence<shiro:hasPermission name="hrattence:szlHrAttence:edit">${not empty szlHrAttence.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="hrattence:szlHrAttence:edit">查看</shiro:lacksPermission></a></li>
+		<li><a href="${ctx}/hrattence/szlHrAttence/">考勤异常列表</a></li>
+		<li class="active"><a href="${ctx}/hrattence/szlHrAttence/form?id=${szlHrAttence.id}">考勤异常<shiro:hasPermission name="hrattence:szlHrAttence:edit">${not empty szlHrAttence.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="hrattence:szlHrAttence:edit">查看</shiro:lacksPermission></a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="szlHrAttence" action="${ctx}/hrattence/szlHrAttence/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
