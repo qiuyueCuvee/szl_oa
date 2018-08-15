@@ -38,7 +38,7 @@ public class CalendarController extends BaseController{
 		SzlHrStaff paramstaff = new SzlHrStaff();
 		if(!"0000".equals(szlHrAttence.getNumber())) {
 			paramstaff.setNumber(szlHrAttence.getNumber());
-		}
+		} 
 		
 		List<SzlHrStaff> stafflist = staffdao.findstaff(paramstaff);
 		result.setCount(stafflist.size());
