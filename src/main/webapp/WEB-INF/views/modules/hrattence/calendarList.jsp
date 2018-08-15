@@ -6,7 +6,7 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$("#number").val("");
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -25,7 +25,7 @@
 		  <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>   
 		  <li><label>工号：</label>
-				<form:input path="number" value="0000" htmlEscape="false" maxlength="255" class="input-medium"/>
+				<form:input path="number"  htmlEscape="true" maxlength="255" class="input-medium"/>
 			</li> 
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>

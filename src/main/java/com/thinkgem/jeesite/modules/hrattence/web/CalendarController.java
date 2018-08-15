@@ -24,6 +24,8 @@ import com.thinkgem.jeesite.modules.hrattence.dao.SzlHrStaffDao;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrAttence;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrStaff;
 import com.thinkgem.jeesite.modules.hrattence.service.SzlHrAttenceService;
+import com.thinkgem.jeesite.modules.overtime.entity.SzlHrOvertime;
+import com.thinkgem.jeesite.modules.overtime.service.SzlHrOvertimeService;
 
 @Controller
 @RequestMapping(value = "${adminPath}/hrattence/calendar")
@@ -35,13 +37,16 @@ public class CalendarController extends BaseController{
 	@Autowired
 	private SzlHrAttenceService attenceService;
 	
+	@Autowired
+	private SzlHrOvertimeService overtimeService;
+	
 	@RequestMapping(value = "list")
 	public String list(SzlHrAttence szlHrAttence,HttpServletRequest request, HttpServletResponse response, Model model) throws ParseException {
 		Page<SzlHrAttence> result=  new Page<SzlHrAttence>(request, response) ;
 		SzlHrStaff paramstaff = new SzlHrStaff();
-		if(!"0000".equals(szlHrAttence.getNumber())) {
-			paramstaff.setNumber(szlHrAttence.getNumber());
-		} 
+//		if(!"0000".equals(szlHrAttence.getNumber())) {
+		paramstaff.setNumber(szlHrAttence.getNumber());
+//		} 
 		
 		List<SzlHrStaff> stafflist = staffdao.findstaff(paramstaff);
 		result.setCount(stafflist.size());
@@ -107,20 +112,36 @@ public class CalendarController extends BaseController{
 			while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();
 			Object key = entry.getKey();
-			html.append("<tr><td>");
-			html.append(key);
-			html.append("</td>");
+			new SzlHrStaff();
+			SzlHrStaff tmpstaff   = staffdao.findByNumber(key.toString());
+			if(tmpstaff!=null) {
+				html.append("<tr><td>");
+				html.append(tmpstaff.getName());
+				html.append("</td>");
+			}
 			List<SzlHrAttence> val = (List<SzlHrAttence>)entry.getValue();
 			result.setList(val);
-				for(SzlHrAttence obj:val) {
-					html.append("<td>");
-					html.append(obj.getStatus());
-					html.append("</td>");
-				}
-				html.append("</tr>");
+			for(SzlHrAttence obj:val) {
+				html.append("<td>");
+				html.append(obj.getStatus());
+				html.append("</td>");
+		
+			}
+			SzlHrOvertime szlHrOvertime = new SzlHrOvertime();
+			szlHrOvertime.setNumber(key.toString());
+			List<SzlHrOvertime> timelist = overtimeService.findList(szlHrOvertime);
+			long hours =0l;
+			for(SzlHrOvertime element:timelist) {
+				hours += Long.valueOf(element.getWorkHours());
+			}
+			html.append("<td>");
+			html.append(hours);
+			html.append("</td>");
+			html.append("</tr>");
 			}
 			
 		}
+		
 		szlHrAttence.setHtml(html.toString());
 		model.addAttribute("page", result);
 		return "modules/hrattence/calendarList";

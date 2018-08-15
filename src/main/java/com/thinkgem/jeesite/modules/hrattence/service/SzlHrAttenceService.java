@@ -161,9 +161,9 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		String enddate =  dfst.format(d.getTime());
 //		SzlHrStaff paramstaff = new SzlHrStaff();
 //		paramstaff.setNumber(request.getParameter("number"));
-		if("0000".equals(szlHrStaff.getNumber())) {
+	/*	if("0000".equals(szlHrStaff.getNumber())) {
 			szlHrStaff=null;
-		}
+		}*/
 		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
 		if(stafflist.size()>30) {
 			if(page.getPageNo()*page.getPageSize()>stafflist.size()) {
@@ -182,7 +182,7 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			
 			List<SzlHrAttence> list = attencedao.findMonthList(szlHrAttence);
 			HashMap calendarMap = new HashMap();
-			calendarMap.put(element.getName(), list);
+			calendarMap.put(element.getNumber(), list);
 			maplist.add(calendarMap);
 			
 			for(SzlHrAttence entity:list) {
@@ -198,7 +198,7 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 					entity.setHrStaffName(staff.getName());
 					entity.setHrStaffDept(staff.getDepartment());
 				}
-			
+			 
 				SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
 				String start = entity.getStarttime();
 				String end = entity.getEndtime();
@@ -258,7 +258,7 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 								entity.setStatus("#");
 							}
 					  }
-		
+					  
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
