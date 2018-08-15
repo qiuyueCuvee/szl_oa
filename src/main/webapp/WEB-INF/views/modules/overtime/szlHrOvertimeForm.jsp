@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
+
 <html>
 <head>
 <title>加班申请管理</title>
@@ -50,7 +51,7 @@
 		<div class="control-group">
 			<label class="control-label">工作时长(小时)：</label>
 			<div class="controls">
-				<form:input id="workHours" path="workHours" htmlEscape="false" maxlength="255" class="input-xlarge required" readonly="true"/>
+				<form:input id="workHours" path="workHours" htmlEscape="false" maxlength="255" class="input-xlarge required"  onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -89,35 +90,6 @@ $(document).ready(function() {
 			}
 		}
 	});
-});
-
-//计算两个时间相差了几个小时
-function getIntervalHour(startTime,endTime) {
-	var StartTime = new Date(startTime);//将字符串转化为时间
-	var EndTime = new Date(endTime);
-    var ms = EndTime.getTime() - StartTime.getTime();
-    if (ms < 0){ 
-    	return 0;
-    }else{
-    	var hours= Math.floor(ms/1000/60/60);
-	    return hours;
-    } 
-}
-//开始时间发生变化
-$("#startTime").change(function(){
-	 var startTime=$("#startTime").val();
-	 var endTime=$("#endTime").val();
-	 var workHours=getIntervalHour(startTime, endTime);
-	 //写入工作时长
-	 $("#workHours").val(workHours); 
-});
-//结束时间发生变化
-$("#endTime").change(function(){
-	var startTime=$("#startTime").val();
-	var endTime=$("#endTime").val();
-	var workHours=getIntervalHour(startTime, endTime);
-	//写入工作时长
-	$("#workHours").val(workHours); 
 });
 </script>
 </body>

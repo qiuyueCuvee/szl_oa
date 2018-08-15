@@ -81,13 +81,13 @@
 				<td>
 				<c:choose>  
 					   <c:when test="${szlHrOvertime.overtimeStatus == '3'}" >      
-						 <a href="${ctx}/overtime/szlHrOvertime/pass?id=${szlHrOvertime.id}" onclick="return confirmx('确认要通过该申报信息吗？', this.href)">通过</a>
+						 <a href="${ctx}/overtime/szlHrOvertime/pass?id=${szlHrOvertime.id}" onclick="return confirmx('确认要通过该加班信息吗？', this.href)">通过</a>
 					   </c:when>  
 					   <c:when test="${szlHrOvertime.overtimeStatus == '2'}" >      
     					 <a href="${ctx}/overtime/szlHrOvertime/goout?id=${szlHrOvertime.id}">驳回</a>
 					   </c:when>  
 					   <c:otherwise>  
-						 <a href="${ctx}/overtime/szlHrOvertime/pass?id=${szlHrOvertime.id}" onclick="return confirmx('确认要通过该申报信息吗？', this.href)">通过</a>
+						 <a href="${ctx}/overtime/szlHrOvertime/pass?id=${szlHrOvertime.id}" onclick="return confirmx('确认要通过该加班信息吗？', this.href)">通过</a>
     					 <a href="${ctx}/overtime/szlHrOvertime/goout?id=${szlHrOvertime.id}">驳回</a>
 					   </c:otherwise>  
 					</c:choose> 
