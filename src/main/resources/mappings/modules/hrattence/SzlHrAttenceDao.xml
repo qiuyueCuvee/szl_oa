@@ -31,7 +31,7 @@
 			 
 			<![CDATA[   where a.date >= str_to_date(#{begindate},"%Y-%m-%d")  
 			and a.date <= str_to_date(#{enddate},"%Y-%m-%d") 
-			and a.number = #{number}
+			and a.number = #{number} order by date
 			]]>  
 	</select>
 	
@@ -41,7 +41,10 @@
 		FROM szl_hr_attence a
 		<include refid="szlHrAttenceJoins"/>
 		<where>
-			
+			1 = 1
+			<if test="number != null and number != ''">
+				AND a.number = #{number}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -50,6 +53,21 @@
 			<otherwise>
 			</otherwise>
 		</choose>
+	</select>
+	
+	<select id="findAllMonthList" resultType="SzlHrAttence">
+		SELECT 
+			<include refid="szlHrAttenceColumns"/>
+		FROM szl_hr_attence a
+		<where>
+		<![CDATA[     a.date >= str_to_date(#{begindate},"%Y-%m-%d")  
+			and a.date <= str_to_date(#{enddate},"%Y-%m-%d") 
+			]]>  
+			
+			<if test="number != null and number != ''">
+				AND a.number = #{number}
+			</if>
+			</where>
 	</select>
 	
 	<select id="findAllList" resultType="SzlHrAttence">
