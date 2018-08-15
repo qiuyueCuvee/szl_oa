@@ -6,6 +6,7 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$("#statusReason").val("")
 			//$("#name").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
@@ -30,7 +31,7 @@
 		<li><a href="${ctx}/leave/szlHrLeave/">请假信息列表</a></li>
 		<li class="active"><a href="${ctx}/leave/szlHrLeave/out?id=${szlHrLeave.id}">加班申请驳回</a></li>
 	</ul><br/>
-	<form:form id="inputForm" modelAttribute="szlHrLeave" action="${ctx}/leave/szlHrLeave/save" method="post" class="form-horizontal">
+	<form:form id="inputForm" modelAttribute="szlHrLeave" action="${ctx}/leave/szlHrLeave/out" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>	
 		<div class="control-group">
@@ -86,7 +87,7 @@
 		<div class="control-group">
 			<label class="control-label">驳回原因：</label>
 			<div class="controls">
-				<form:input path="statusReason" htmlEscape="false" maxlength="255" class="input-xlarge "/>
+				<form:textarea id="statusReason" path="statusReason" htmlEscape="false" rows="4" maxlength="255" class="input-xxlarge "/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>

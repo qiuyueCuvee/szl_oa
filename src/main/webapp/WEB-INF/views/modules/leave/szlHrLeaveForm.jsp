@@ -24,8 +24,7 @@
 			<label class="control-label">申请时间：</label>
 			<div class="controls">
 				<input name="applyTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate required"
-					value="<fmt:formatDate value="${today}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+					value="${today}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -65,9 +64,9 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">请假时长：</label>
+			<label class="control-label">请假时长(小时)：</label>
 			<div class="controls">
-				<form:input path="leaveHours" htmlEscape="false" maxlength="255" class="input-xlarge required"/>
+				<form:input path="leaveHours" htmlEscape="false" maxlength="255" class="input-xlarge required"  onkeyup="value=value.replace(/[^\d{1,}\.\d{1,}|\d{1,}]/g,'')"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -100,7 +99,7 @@ $(document).ready(function() {
 			}
 		}
 	});
-});
+});/*
 //计算两个时间相差了几个小时
 function getIntervalHour(startTime,endTime) {
 	var StartTime = new Date(startTime);//将字符串转化为时间
@@ -128,7 +127,7 @@ $("#endTime").change(function(){
 	var leaveHours=getIntervalHour(startTime, endTime);
 	//写入工作时长
 	$("#leaveHours").val(leaveHours); 
-});
+}); */
 </script>
 </body>
 </html>

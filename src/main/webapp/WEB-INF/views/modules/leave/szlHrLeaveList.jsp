@@ -70,9 +70,9 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="szlHrLeave">
 			<tr>
-				<td>${szlHrOvertime.number}</td>
-				<td>${szlHrOvertime.hrStaffName}</td>
-				<td>${szlHrOvertime.hrStaffDept}</td>
+				<td>${szlHrLeave.number}</td>
+				<td>${szlHrLeave.hrStaffName}</td>
+				<td>${szlHrLeave.hrStaffDept}</td>
 				<td>
 					${szlHrLeave.applyTime}
 				</td>

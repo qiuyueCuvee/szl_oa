@@ -1,10 +1,7 @@
 package com.thinkgem.jeesite.modules.hrattence.service;
 
 import java.text.SimpleDateFormat;
-<<<<<<< HEAD
-=======
 
->>>>>>> 2a997e54d0e4c734c61d526815270946da4d8987
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
