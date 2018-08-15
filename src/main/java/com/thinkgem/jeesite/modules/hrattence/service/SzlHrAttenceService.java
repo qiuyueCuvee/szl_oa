@@ -11,7 +11,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -83,19 +82,16 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			if(entity.getNumber()!=null) {
 				staff = staffdao.findByNumber(entity.getNumber().toString());
 			}
-			
 			if(staff!=null) {
 				entity.setHrStaffName(staff.getName());
 				entity.setHrStaffDept(staff.getDepartment());
 			}
-		
 			SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
 			String start = entity.getStarttime();
 			String end = entity.getEndtime();
 			
 		    try {
 				  if(staff!=null&&end!=null) {
-					  
 						Date begin=dfs.parse(start);
 						Date after=dfs.parse(end);
 					    Date tmp = dfs.parse("09:00:00");
@@ -141,7 +137,6 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 						/* if("0".equals(entity.getSum())) {
 							 attencelist.remove(entity);
 							}*/
-						 
 				  }
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -192,15 +187,11 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			HashMap calendarMap = new HashMap();
 			calendarMap.put(element.getName(), list);
 			maplist.add(calendarMap);
+			
 			for(SzlHrAttence entity:list) {
-				
-//				HashMap calendarMap = new HashMap();
 				SzlHrStaff hhrStaff = new SzlHrStaff();
 				hhrStaff.setNumber(entity.getNumber());
 				SzlHrStaff staff =  null;
-				/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-					calendarMap.put(entity.getDate(), "o");
-				}*/
 				
 				if(entity.getNumber()!=null) {
 					staff = staffdao.findByNumber(entity.getNumber().toString());
@@ -260,41 +251,23 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 							entity.setStatus(" ");
 							if(Integer.parseInt(entity.getSum())==0) {
 								entity.setStatus("√");
-								/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-									calendarMap.put(entity.getDate(), "√");
-								}*/
 								
 							}
 							if(Integer.parseInt(entity.getLatetime())>0) {
 								entity.setStatus("×");
-								/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-									calendarMap.put(entity.getDate(), "×");
-								}*/
 								
 							}
 							if(Integer.parseInt(entity.getEarlytime())>0) {
 								entity.setStatus("#");
-								/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-									calendarMap.put(entity.getDate(), "#");
-								}*/
-								
 							}
-							
 					  }
 		
-		
-//		List<HashMap> calendarMapList = new ArrayList();
-		
-			
-				 /* calendarMapList.add(calendarMap);
-				  entity.setCalendarMapList(calendarMapList);*/
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
-		}
-//		result.setList(list);
 		return maplist;
 	}
 	

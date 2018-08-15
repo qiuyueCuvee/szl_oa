@@ -38,23 +38,6 @@
 		</thead>
 		
 		<tbody>
-		<%-- <c:forEach items="${list}" var="map">
-			<tr>
-			<td>
-					 			 ${szlHrAttence.hrStaffName} 
-							</td>
-				<c:forEach var="tmp"  items="${map}" >
-	 					
-		 			    <c:forEach items="${tmp.value}" var="element">  
-		 			      <c:if test="${szlHrAttence.number == tmp.key}">  
-					 		<td>
-					 			 ${element.status} 
-							</td>
-							 </c:if>  
-						</c:forEach>
-	 			</c:forEach>
-			</tr>
-		</c:forEach> --%>
 		</tbody>
 	</table>
 	  <div class="pagination">${page}</div>   

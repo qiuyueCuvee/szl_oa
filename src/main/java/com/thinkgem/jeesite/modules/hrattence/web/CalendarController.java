@@ -1,7 +1,10 @@
 package com.thinkgem.jeesite.modules.hrattence.web;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,48 +45,61 @@ public class CalendarController extends BaseController{
 		
 		List<SzlHrStaff> stafflist = staffdao.findstaff(paramstaff);
 		result.setCount(stafflist.size());
-//		List<SzlHrAttence> list = result.getList();
 		List<HashMap> list = attenceService.findMonthPage(new Page<SzlHrAttence>(request, response), szlHrAttence,paramstaff,request);
 		Map calendarMap = new HashMap();
-		/*for(SzlHrAttence entity:list) {
-			SzlHrStaff hhrStaff = new SzlHrStaff();
-			hhrStaff.setNumber(entity.getNumber());
-			SzlHrStaff staff =  null;
-			if(entity.getNumber()!=null) {
-				staff = staffdao.findByNumber(entity.getNumber().toString());
-			}
-			
-			if(staff!=null) {
-				entity.setHrStaffName(staff.getName());
-			}
-		}*/
 		
 		StringBuffer html = new StringBuffer();
 		html.append("<tr>\r\n");
-//		html.append("<th>编号</th>\r\n");
 		html.append("<th>姓名</th>");
-		Calendar c = Calendar.getInstance();
-//		int month = c.get(Calendar.MONTH);
-		c.add(Calendar.MONTH, -1);
-		c.add(Calendar.DATE, 26);
+		Calendar start = Calendar.getInstance();
+		start.add(Calendar.MONTH, -3);
+		start.set(Calendar.DAY_OF_MONTH, 26);
+		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
+		String begindate = dfst.format(start.getTime());
+		int maxCols = start.getActualMaximum(Calendar.DAY_OF_MONTH);
 		
-		int maxCols = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		Calendar end = Calendar.getInstance();
+		end.add(Calendar.MONTH, -2);
+		end.set(Calendar.DAY_OF_MONTH, 25);
+		String enddate =  dfst.format(end.getTime());
 		
-		
+		List<Calendar> calendar = this.getWeekend(begindate, enddate);
 		for(int col = 26; col <= maxCols; col++) {
 			html.append("<th>");
+			
+			for(Calendar element:calendar) {
+				if(element.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY&&element.get(Calendar.DAY_OF_MONTH)==col){
+					html.append("六</br>");
+					break;
+				}
+				if(element.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY&&element.get(Calendar.DAY_OF_MONTH)==col){
+					html.append("日</br>");
+					break;
+				}
+			}
 			html.append(col);
 			html.append("</th>");
 		}
 		for(int col = 1; col <= 25; col++) {
 			html.append("<th>");
+			
+			for(Calendar element:calendar) {
+				if(element.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY&&element.get(Calendar.DAY_OF_MONTH)==col){
+					html.append("六</br>");
+					break;
+				}
+				if(element.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY&&element.get(Calendar.DAY_OF_MONTH)==col){
+					html.append("日</br>");
+					break;
+				}
+			}
 			html.append(col);
 			html.append("</th>");
 		}
-		html.append("<th>加班总数/小时</th>");
-		html.append("<th>倒休(天)</th>");
-		html.append("<th>扣薪假(天)</th>");
-		html.append("<th>实际出勤天数</th>");
+		html.append("<th>加班总数/</br>小时</th>");
+		html.append("<th>倒休</br>(天)</th>");
+		html.append("<th>扣薪假</br>(天)</th>");
+		html.append("<th>实际出</br>勤天数</th>");
 		html.append("<th>签字确认</th>");
 		html.append("</tr>\r\n");
 		for(HashMap map:list) {
@@ -105,13 +121,51 @@ public class CalendarController extends BaseController{
 			}
 			
 		}
-		
-		
 		szlHrAttence.setHtml(html.toString());
-//		szlHrAttence.setCalendarMap(null);
 		model.addAttribute("page", result);
-//		model.addAttribute("list", list);
 		return "modules/hrattence/calendarList";
-		
 	}
+
+	//获得周六周日
+	public List<Calendar> getWeekend(String startTime, String endTime) throws ParseException{
+		    SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");  
+			Date beginDate = null;
+			Date endDate= null;
+			Calendar start = Calendar.getInstance();
+			if(startTime!=null &&!startTime.isEmpty())  {
+				beginDate = dfst.parse(startTime);
+				start.setTime(beginDate);
+			}
+			Calendar end = Calendar.getInstance();
+			if(endTime!=null &&!endTime.isEmpty())  {
+				endDate = dfst.parse(endTime);
+				end.setTime(endDate);
+			}
+			List<Calendar> lDate = new ArrayList<Calendar>();
+			List<Calendar> calendar = new ArrayList<Calendar>();
+			lDate.add(start); 
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(beginDate);
+			while (true) {
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+				Calendar tmp = Calendar.getInstance();
+				tmp.setTime(cal.getTime());
+				if (endDate.after(cal.getTime())) {
+					lDate.add(tmp);
+				} else {
+					break;
+				}
+			}
+			lDate.add(end); 
+			for (Calendar element: lDate) {
+				if(element.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY){
+					calendar.add(element);
+				}
+				if(element.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY){
+					calendar.add(element);
+				}
+			
+			} 
+			return calendar;
+		}
 }

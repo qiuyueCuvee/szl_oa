@@ -27,7 +27,6 @@
 		SELECT 
 			<include refid="szlHrAttenceColumns"/>
 		FROM szl_hr_attence a 
-		 
 			 
 			<![CDATA[   where a.date >= str_to_date(#{begindate},"%Y-%m-%d")  
 			and a.date <= str_to_date(#{enddate},"%Y-%m-%d") 
