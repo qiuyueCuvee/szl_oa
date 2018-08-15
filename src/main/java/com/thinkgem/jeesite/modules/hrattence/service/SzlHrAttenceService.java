@@ -159,11 +159,6 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		d.add(Calendar.MONTH, -2);
 		d.set(Calendar.DAY_OF_MONTH, 25);
 		String enddate =  dfst.format(d.getTime());
-//		SzlHrStaff paramstaff = new SzlHrStaff();
-//		paramstaff.setNumber(request.getParameter("number"));
-	/*	if("0000".equals(szlHrStaff.getNumber())) {
-			szlHrStaff=null;
-		}*/
 		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
 		if(stafflist.size()>30) {
 			if(page.getPageNo()*page.getPageSize()>stafflist.size()) {

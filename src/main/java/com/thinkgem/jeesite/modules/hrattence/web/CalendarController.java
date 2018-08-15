@@ -44,9 +44,7 @@ public class CalendarController extends BaseController{
 	public String list(SzlHrAttence szlHrAttence,HttpServletRequest request, HttpServletResponse response, Model model) throws ParseException {
 		Page<SzlHrAttence> result=  new Page<SzlHrAttence>(request, response) ;
 		SzlHrStaff paramstaff = new SzlHrStaff();
-//		if(!"0000".equals(szlHrAttence.getNumber())) {
 		paramstaff.setNumber(szlHrAttence.getNumber());
-//		} 
 		
 		List<SzlHrStaff> stafflist = staffdao.findstaff(paramstaff);
 		result.setCount(stafflist.size());
