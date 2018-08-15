@@ -88,46 +88,8 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			String end = entity.getEndtime();
 			
 		    try {
-				  if(staff!=null&&end!=null) {
-						Date begin=dfs.parse(start);
-						Date after=dfs.parse(end);
-					    Date tmp = dfs.parse("09:00:00");
-					    Date tmp1 = dfs.parse("18:00:00");
-					    long between=(begin.getTime()-tmp.getTime())/1000;
-					    long min=between/60;
-					    String minute = String.valueOf(min);
-					    long between1=(tmp1.getTime()-after.getTime())/1000;
-					    long min1=between1/60;
-					    String minute1 = String.valueOf(min1);
-					    long absenttime=0;
-					    
-					    //latetime
-						if(!"00:00:00".equals(entity.getStarttime())) {
-							entity.setLatetime(minute);
-						}
-						if("00:00:00".equals(entity.getStarttime())||min<0) {
-							min =0;
-							entity.setLatetime("0");
-						}
-						//earlytime
-						if(!"00:00:00".equals(entity.getEndtime())) {
-							entity.setEarlytime(minute1);
-						}
-						if("00:00:00".equals(entity.getEndtime())||min1<0) {
-							min1=0;
-							entity.setEarlytime("0");
-						}
-						//absenttime
-						absenttime = 540-min-min1;
-						entity.setAbsenttime(String.valueOf(absenttime));
-						//sum
-						entity.setSum(String.valueOf(min+min1+absenttime));
-						if(!"00:00:00".equals(entity.getEndtime())&&!"00:00:00".equals(entity.getStarttime())) {
-							absenttime = min+min1;
-							entity.setAbsenttime(String.valueOf(absenttime));
-							//sum
-							entity.setSum(String.valueOf(absenttime));
-						}
+				  if(start!=null&&end!=null) {
+						this.parseDate(entity, start, end);
 						 if(!"0".equals(entity.getSum())) {
 							reslist.add(entity);
 						} 
@@ -194,53 +156,14 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 					entity.setHrStaffDept(staff.getDepartment());
 				}
 			 
-				SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
+				
 				String start = entity.getStarttime();
 				String end = entity.getEndtime();
 				
 			    try {
 					  if(start!=null&&end!=null) {
-						  
-							Date begin=dfs.parse(start);
-							Date after=dfs.parse(end);
-						    Date tmp = dfs.parse("09:00:00");
-						    Date tmp1 = dfs.parse("18:00:00");
-						    long between=(begin.getTime()-tmp.getTime())/1000;
-						    long min=between/60;
-						    String minute = String.valueOf(min);
-						    long between1=(tmp1.getTime()-after.getTime())/1000;
-						    long min1=between1/60;
-						    String minute1 = String.valueOf(min1);
-						    long absenttime=0;
-						    
-						    //latetime
-							if(!"00:00:00".equals(entity.getStarttime())) {
-								entity.setLatetime(minute);
-							}
-							if("00:00:00".equals(entity.getStarttime())||min<0) {
-								min =0;
-								entity.setLatetime("0");
-							}
-							//earlytime
-							if(!"00:00:00".equals(entity.getEndtime())) {
-								entity.setEarlytime(minute1);
-							}
-							if("00:00:00".equals(entity.getEndtime())||min1<0) {
-								min1=0;
-								entity.setEarlytime("0");
-							}
-							//absenttime
-							absenttime = 540-min-min1;
-							entity.setAbsenttime(String.valueOf(absenttime));
-							//sum
-							entity.setSum(String.valueOf(min+min1+absenttime));
-							if(!"00:00:00".equals(entity.getEndtime())&&!"00:00:00".equals(entity.getStarttime())) {
-								absenttime = min+min1;
-								entity.setAbsenttime(String.valueOf(absenttime));
-								//sum
-								entity.setSum(String.valueOf(absenttime));
-							}
-							entity.setStatus(" ");
+						    this.parseDate(entity, start, end);
+						    entity.setStatus(" ");
 							if(Integer.parseInt(entity.getSum())==0) {
 								entity.setStatus("√");
 								
@@ -271,6 +194,51 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 	@Transactional(readOnly = false)
 	public void delete(SzlHrAttence szlHrAttence) {
 		super.delete(szlHrAttence);
+	}
+	
+	public void parseDate(SzlHrAttence entity,String start,String end) throws ParseException {
+		SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
+		Date begin=dfs.parse(start);
+		Date after=dfs.parse(end);
+	    Date tmp = dfs.parse("09:00:00");
+	    Date tmp1 = dfs.parse("18:00:00");
+	    long between=(begin.getTime()-tmp.getTime())/1000;
+	    long min=between/60;
+	    String minute = String.valueOf(min);
+	    long between1=(tmp1.getTime()-after.getTime())/1000;
+	    long min1=between1/60;
+	    String minute1 = String.valueOf(min1);
+	    long absenttime=0;
+	    
+	    //latetime
+		if(!"00:00:00".equals(entity.getStarttime())) {
+			entity.setLatetime(minute);
+		}
+		if("00:00:00".equals(entity.getStarttime())||min<0) {
+			min =0;
+			entity.setLatetime("0");
+		}
+		//earlytime
+		if(!"00:00:00".equals(entity.getEndtime())) {
+			entity.setEarlytime(minute1);
+		}
+		if("00:00:00".equals(entity.getEndtime())||min1<0) {
+			min1=0;
+			entity.setEarlytime("0");
+		}
+		//absenttime
+		absenttime = 540-min-min1;
+		entity.setAbsenttime(String.valueOf(absenttime));
+		//sum
+		entity.setSum(String.valueOf(min+min1+absenttime));
+		if(!"00:00:00".equals(entity.getEndtime())&&!"00:00:00".equals(entity.getStarttime())) {
+			absenttime = min+min1;
+			entity.setAbsenttime(String.valueOf(absenttime));
+			//sum
+			entity.setSum(String.valueOf(absenttime));
+		}
+		
+		
 	}
 	
 }
