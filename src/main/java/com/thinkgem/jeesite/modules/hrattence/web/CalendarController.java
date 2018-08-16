@@ -1,5 +1,6 @@
 package com.thinkgem.jeesite.modules.hrattence.web;
 
+import java.io.FileOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,12 +14,20 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.modules.hrattence.dao.SzlHrStaffDao;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrAttence;
@@ -110,7 +119,6 @@ public class CalendarController extends BaseController{
 			while (iter.hasNext()) {
 			Map.Entry entry = (Map.Entry) iter.next();
 			Object key = entry.getKey();
-			new SzlHrStaff();
 			SzlHrStaff tmpstaff   = staffdao.findByNumber(key.toString());
 			if(tmpstaff!=null) {
 				html.append("<tr><td>");
@@ -144,6 +152,89 @@ public class CalendarController extends BaseController{
 		model.addAttribute("page", result);
 		return "modules/hrattence/calendarList";
 	}
+	
+	@RequestMapping(value = "export", method=RequestMethod.POST)
+	public String export(SzlHrAttence szlHrAttence,HttpServletRequest request, HttpServletResponse response, Model model,RedirectAttributes redirectAttributes) throws ParseException {
+		try {
+            String fileName = "深之蓝考勤表"+DateUtils.getDate("yyyyMMddHHmmss")+".xls";
+            Calendar start = Calendar.getInstance();
+    		start.add(Calendar.MONTH, -3);
+    		start.set(Calendar.DAY_OF_MONTH, 26);
+    		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
+    		String begindate = dfst.format(start.getTime());
+    		int maxCols = start.getActualMaximum(Calendar.DAY_OF_MONTH);
+            HSSFWorkbook wb = new HSSFWorkbook();
+            HSSFSheet sheet = wb.createSheet("考勤");  //创建table工作薄
+            HSSFRow row;
+            HSSFCell cell;
+            SzlHrStaff paramstaff = new SzlHrStaff();
+    		paramstaff.setNumber(szlHrAttence.getNumber());
+            List<HashMap> list = attenceService.findMonth(new Page<SzlHrAttence>(request, response), szlHrAttence,paramstaff,request);
+            row = sheet.createRow(0);//创建表格行
+//            List headerList = new ArrayList();
+            for(int j = 0; j < maxCols+6; j++) {
+            		
+            		cell = row.createCell(j);
+            		 if(j==0) {
+//            			 headerList.add(e)
+            			 cell.setCellValue("姓名");
+            		 }
+            		 else if(j==maxCols+1) {
+            			 cell.setCellValue("加班总数/小时");
+            		 }
+            		 else  if(j==maxCols+2) {
+            			 cell.setCellValue("倒休/(天)");
+            		 }
+            		 else  if(j==maxCols+3) {
+            			 cell.setCellValue("扣薪假/(天)");
+            		 }
+            		 else  if(j==maxCols+4) {
+            			 cell.setCellValue("实际出勤天数");
+            		 }
+            		 else  if(j==maxCols+5) {
+            			 cell.setCellValue("签字确认");
+            		 }else {
+            			 if(j>0&&j<=maxCols-25) {
+            				 cell.setCellValue(j+25);
+            			 }
+            			 if(j>maxCols-25) {
+            				 cell.setCellValue(j-maxCols+25);
+            			 }
+            		 }
+            }
+            for(int i = 0; i < list.size(); i++) {
+            		row = sheet.createRow(i+1);//创建表格行
+              
+        			Iterator iter = list.get(i).entrySet().iterator();
+        			while (iter.hasNext()) {
+        			Map.Entry entry = (Map.Entry) iter.next();
+        			Object key = entry.getKey();
+        			SzlHrStaff tmpstaff   = staffdao.findByNumber(key.toString());
+        			cell = row.createCell(0);
+          			cell.setCellValue(tmpstaff.getName());
+        			List<SzlHrAttence> val = (List<SzlHrAttence>)entry.getValue();
+        			for(int j = 0; j < val.size(); j++) {
+        				 cell = row.createCell(j+1);
+        				 cell.setCellValue(val.get(j).getStatus());
+        			}
+        			SzlHrOvertime szlHrOvertime = new SzlHrOvertime();
+        			szlHrOvertime.setNumber(key.toString());
+        			List<SzlHrOvertime> timelist = overtimeService.findList(szlHrOvertime);
+        			long hours =0l;
+        			for(SzlHrOvertime element:timelist) {
+        				hours += Long.valueOf(element.getWorkHours());
+        			}
+        			cell = row.createCell(maxCols+1);
+          			cell.setCellValue(hours);
+	    		}
+	            
+	        }
+            wb.write(new FileOutputStream("d:/"+fileName));
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "导出考勤失败！失败信息："+e.getMessage());
+		}
+		return "redirect:"+Global.getAdminPath()+"/hrattence/calendar/list";
+	} 
 
 	//获得周六周日
 	public List<Calendar> getWeekend(String startTime, String endTime) throws ParseException{

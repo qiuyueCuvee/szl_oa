@@ -108,19 +108,17 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		return result;
 	}
 	
-	public List<HashMap> findMonthPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
-//		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
-//		List<SzlHrAttence> list = result.getList();
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.MONTH, -3);
-		c.set(Calendar.DAY_OF_MONTH, 26);
+	public List<HashMap> findMonth(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
+		
+		List<HashMap> maplist = new ArrayList<HashMap>();
+		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
+		this.refactorStaff(stafflist, szlHrAttence, maplist);
+		return maplist;
+	}
 	
-		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
-		String begindate = dfst.format(c.getTime());
-		Calendar d = Calendar.getInstance();
-		d.add(Calendar.MONTH, -2);
-		d.set(Calendar.DAY_OF_MONTH, 25);
-		String enddate =  dfst.format(d.getTime());
+	public List<HashMap> findMonthPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
+		
+		List<HashMap> maplist = new ArrayList<HashMap>();
 		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
 		
 		if(stafflist.size()>page.getPageSize()) {
@@ -131,7 +129,33 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			}
 		}
 		
-		List<HashMap> maplist = new ArrayList<HashMap>();
+		this.refactorStaff(stafflist, szlHrAttence, maplist);
+		return maplist;
+	}
+	
+	@Transactional(readOnly = false)
+	public void save(SzlHrAttence szlHrAttence) {
+		super.save(szlHrAttence);
+	}
+	
+	@Transactional(readOnly = false)
+	public void delete(SzlHrAttence szlHrAttence) {
+		super.delete(szlHrAttence);
+	}
+	
+	
+	public  void refactorStaff(List<SzlHrStaff> stafflist,SzlHrAttence szlHrAttence,List<HashMap> maplist){
+		
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, -3);
+		c.set(Calendar.DAY_OF_MONTH, 26);
+	
+		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
+		String begindate = dfst.format(c.getTime());
+		Calendar d = Calendar.getInstance();
+		d.add(Calendar.MONTH, -2);
+		d.set(Calendar.DAY_OF_MONTH, 25);
+		String enddate =  dfst.format(d.getTime());
 		for(SzlHrStaff element:stafflist) {
 			
 			szlHrAttence.setBegindate(begindate);
@@ -182,18 +206,7 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 					e.printStackTrace();
 				}
 			}
-		}
-		return maplist;
-	}
-	
-	@Transactional(readOnly = false)
-	public void save(SzlHrAttence szlHrAttence) {
-		super.save(szlHrAttence);
-	}
-	
-	@Transactional(readOnly = false)
-	public void delete(SzlHrAttence szlHrAttence) {
-		super.delete(szlHrAttence);
+			}
 	}
 	
 	public void parseDate(SzlHrAttence entity,String start,String end) throws ParseException {
