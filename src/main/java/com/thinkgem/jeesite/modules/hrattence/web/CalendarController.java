@@ -170,13 +170,11 @@ public class CalendarController extends BaseController{
             SzlHrStaff paramstaff = new SzlHrStaff();
     		paramstaff.setNumber(szlHrAttence.getNumber());
             List<HashMap> list = attenceService.findMonth(new Page<SzlHrAttence>(request, response), szlHrAttence,paramstaff,request);
-            row = sheet.createRow(0);//创建表格行
-//            List headerList = new ArrayList();
+            row = sheet.createRow(0); 
             for(int j = 0; j < maxCols+6; j++) {
             		
             		cell = row.createCell(j);
             		 if(j==0) {
-//            			 headerList.add(e)
             			 cell.setCellValue("姓名");
             		 }
             		 else if(j==maxCols+1) {
@@ -203,7 +201,7 @@ public class CalendarController extends BaseController{
             		 }
             }
             for(int i = 0; i < list.size(); i++) {
-            		row = sheet.createRow(i+1);//创建表格行
+            		row = sheet.createRow(i+1); 
               
         			Iterator iter = list.get(i).entrySet().iterator();
         			while (iter.hasNext()) {
