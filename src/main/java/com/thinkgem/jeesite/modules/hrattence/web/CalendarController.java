@@ -160,11 +160,9 @@ public class CalendarController extends BaseController{
             Calendar start = Calendar.getInstance();
     		start.add(Calendar.MONTH, -3);
     		start.set(Calendar.DAY_OF_MONTH, 26);
-    		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
-    		String begindate = dfst.format(start.getTime());
     		int maxCols = start.getActualMaximum(Calendar.DAY_OF_MONTH);
             HSSFWorkbook wb = new HSSFWorkbook();
-            HSSFSheet sheet = wb.createSheet("考勤");  //创建table工作薄
+            HSSFSheet sheet = wb.createSheet("考勤");   
             HSSFRow row;
             HSSFCell cell;
             SzlHrStaff paramstaff = new SzlHrStaff();

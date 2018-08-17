@@ -9,7 +9,7 @@
 			$("#number").val("");
 			
 			$("#btnExport").click(function(){
-				top.$.jBox.confirm("确认要导出用户数据吗？","系统提示",function(v,h,f){
+				top.$.jBox.confirm("确认要考勤数据吗？","系统提示",function(v,h,f){
 					if(v=="ok"){
 						$("#searchForm").attr("action","${ctx}/hrattence/calendar/export");
 						$("#searchForm").submit();
@@ -40,7 +40,6 @@
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 			<input id="btnExport" class="btn btn-primary" type="button" value="导出"/>
-		</ul> 
 	</form:form>
 	
 	<sys:message content="${message}"/>

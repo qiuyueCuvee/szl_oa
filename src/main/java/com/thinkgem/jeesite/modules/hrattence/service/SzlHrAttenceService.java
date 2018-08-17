@@ -49,29 +49,28 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		return attencedao.findAllMonthList(szlHrAttence);
 	}
 	
-	public Page<SzlHrAttence> findPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence) {
-		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
-//		List<SzlHrAttence> list = result.getList();
+	public List<SzlHrAttence> findAttenceList(SzlHrAttence szlHrAttence){
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, -3);
 		c.set(Calendar.DAY_OF_MONTH, 26);
 	
 		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
+		
+		SimpleDateFormat tfst = new SimpleDateFormat("hh:mm:ss");
 		String begindate = dfst.format(c.getTime());
+		String starttime = tfst.format(c.getTime());
 		Calendar d = Calendar.getInstance();
 		d.add(Calendar.MONTH, -2);
 		d.set(Calendar.DAY_OF_MONTH, 25);
 		String enddate =  dfst.format(d.getTime());
-		
-		/*SzlHrAttence attence	= new SzlHrAttence();
-		attence.setBegindate(begindate);
-		attence.setEnddate(enddate);*/
-//		List<SzlHrAttence> attencelist = attencedao.findAllMonthList(attence);
+		String endtime = tfst.format(d.getTime());
 		
 		szlHrAttence.setBegindate(begindate);
 		szlHrAttence.setEnddate(enddate);
+		szlHrAttence.setStarttime(starttime);
+		szlHrAttence.setEndtime(endtime);
 		List<SzlHrAttence> list = attencedao.findAllMonthList(szlHrAttence);
-		List<SzlHrAttence> reslist = new ArrayList<SzlHrAttence>();
+		
 		for(SzlHrAttence entity:list) {
 			SzlHrStaff hhrStaff = new SzlHrStaff();
 			hhrStaff.setNumber(entity.getNumber());
@@ -83,19 +82,12 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 				entity.setHrStaffName(staff.getName());
 				entity.setHrStaffDept(staff.getDepartment());
 			}
-			SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
 			String start = entity.getStarttime();
 			String end = entity.getEndtime();
 			
 		    try {
 				  if(start!=null&&end!=null) {
-						this.parseDate(entity, start, end);
-						 if(!"0".equals(entity.getSum())) {
-							reslist.add(entity);
-						} 
-						/* if("0".equals(entity.getSum())) {
-							 attencelist.remove(entity);
-							}*/
+					    this.parseDate(entity, start, end);
 				  }
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -103,11 +95,17 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			}
 		   
 		}
-		result.setList(reslist);
-//		result.setCount(attencelist.size());
+		return list;
+	}
+	//考勤异常
+	public Page<SzlHrAttence> findPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence) {
+		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
+//		List<SzlHrAttence> list = result.getList();
+		result.setList(findAttenceList(szlHrAttence));
 		return result;
 	}
 	
+	//考勤
 	public List<HashMap> findMonth(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
 		
 		List<HashMap> maplist = new ArrayList<HashMap>();
@@ -116,6 +114,7 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		return maplist;
 	}
 	
+	//分页考勤
 	public List<HashMap> findMonthPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
 		
 		List<HashMap> maplist = new ArrayList<HashMap>();
@@ -132,17 +131,6 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		this.refactorStaff(stafflist, szlHrAttence, maplist);
 		return maplist;
 	}
-	
-	@Transactional(readOnly = false)
-	public void save(SzlHrAttence szlHrAttence) {
-		super.save(szlHrAttence);
-	}
-	
-	@Transactional(readOnly = false)
-	public void delete(SzlHrAttence szlHrAttence) {
-		super.delete(szlHrAttence);
-	}
-	
 	
 	public  void refactorStaff(List<SzlHrStaff> stafflist,SzlHrAttence szlHrAttence,List<HashMap> maplist){
 		
@@ -251,6 +239,16 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			entity.setSum(String.valueOf(absenttime));
 		}
 		
+	}
+	
+	@Transactional(readOnly = false)
+	public void save(SzlHrAttence szlHrAttence) {
+		super.save(szlHrAttence);
+	}
+	
+	@Transactional(readOnly = false)
+	public void delete(SzlHrAttence szlHrAttence) {
+		super.delete(szlHrAttence);
 	}
 	
 }

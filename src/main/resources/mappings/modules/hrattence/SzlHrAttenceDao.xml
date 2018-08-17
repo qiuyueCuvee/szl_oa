@@ -60,7 +60,10 @@
 		FROM szl_hr_attence a
 		<where>
 		<![CDATA[     a.date >= str_to_date(#{begindate},"%Y-%m-%d")  
-			and a.date <= str_to_date(#{enddate},"%Y-%m-%d") 
+			and a.date <= str_to_date(#{enddate},"%Y-%m-%d") and
+			 (a.startTime>str_to_date('09:00:00',"%H:%i:%s")  
+			 or a.endTime<str_to_date('18:00:00',"%H:%i:%s") 
+			 or a.startTime=str_to_date('00:00:00',"%H:%i:%s"))
 			]]>  
 			
 			<if test="number != null and number != ''">
