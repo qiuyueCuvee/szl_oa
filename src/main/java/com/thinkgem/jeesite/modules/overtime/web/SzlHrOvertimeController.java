@@ -20,8 +20,12 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.holiday.dao.SzlHrHolidayDao;
+import com.thinkgem.jeesite.modules.holiday.entity.SzlHrHoliday;
+import com.thinkgem.jeesite.modules.holiday.service.SzlHrHolidayService;
 import com.thinkgem.jeesite.modules.overtime.entity.SzlHrOvertime;
 import com.thinkgem.jeesite.modules.overtime.service.SzlHrOvertimeService;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
@@ -35,6 +39,11 @@ public class SzlHrOvertimeController extends BaseController {
 
 	@Autowired
 	private SzlHrOvertimeService szlHrOvertimeService;
+	@Autowired
+	SzlHrHolidayDao szlHrHolidayDao;
+	@Autowired
+	SzlHrHolidayService szlHrHolidayService;
+	
 	
 	@ModelAttribute
 	public SzlHrOvertime get(@RequestParam(required=false) String id) {
@@ -97,6 +106,33 @@ public class SzlHrOvertimeController extends BaseController {
 		szlHrOvertime.setOvertimeStatus("2");		
 		szlHrOvertime.setStatusReason("该单据已经通过管理员审核！");		
 		szlHrOvertimeService.update(szlHrOvertime);
+		//添加信息到holiday表
+		String number=szlHrOvertime.getNumber();
+		String hours=szlHrOvertime.getWorkHours();
+		String ifExist=szlHrHolidayDao.findByNumber(number);
+		SzlHrHoliday szlHrHoliday=new SzlHrHoliday();
+		szlHrHoliday.setNumber(number);
+		//判断该员工信息是否存在
+		if(ifExist==null || "".equals(ifExist)) {
+			//不存在则添加
+			//获取本人的userid
+			String userid = szlHrHolidayDao.getUserId(number);
+			User olduser=new User(userid);
+			szlHrHoliday.setCreateBy(olduser);
+			//默认年假1天
+			szlHrHoliday.setAnnualLeave("1");
+			szlHrHoliday.setShiftLeave(hours);
+			szlHrHolidayService.save(szlHrHoliday);
+		}else{
+			//存在则更新
+			String ShiftLeave=szlHrHolidayDao.findShiftLeaveNumber(number);
+			int oldLeave=Integer.parseInt(ShiftLeave);
+			int newLeave=Integer.parseInt(hours);
+			int now=oldLeave+newLeave;
+			String shiftLeave=now+"";
+			szlHrHoliday.setShiftLeave(shiftLeave);
+			szlHrHolidayDao.updateHoliday(szlHrHoliday);
+		}
 		addMessage(redirectAttributes, "通过加班单成功！");
 		return "redirect:"+Global.getAdminPath()+"/overtime/szlHrOvertime/check/?repage";
 	}

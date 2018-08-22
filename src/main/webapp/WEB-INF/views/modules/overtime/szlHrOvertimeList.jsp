@@ -19,7 +19,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/overtime/szlHrOvertime/">加班申请列表</a></li>
-		<shiro:hasPermission name="overtime:szlHrOvertime:edit"><li><a href="${ctx}/overtime/szlHrOvertime/form">添加加班申请</a></li></shiro:hasPermission>
+		<shiro:hasPermission name="overtime:szlHrOvertime:edit"><li><a href="${ctx}/overtime/szlHrOvertime/form">加班申请</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="szlHrOvertime" action="${ctx}/overtime/szlHrOvertime/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>

@@ -8,7 +8,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/leave/szlHrLeave/">请假信息列表</a></li>
-		<li class="active"><a href="${ctx}/leave/szlHrLeave/form?id=${szlHrLeave.id}">请假信息<shiro:hasPermission name="leave:szlHrLeave:edit">${not empty szlHrLeave.id?'修改':'添加'}</shiro:hasPermission><shiro:lacksPermission name="leave:szlHrLeave:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/leave/szlHrLeave/form?id=${szlHrLeave.id}">请假申请</a></li>
 	</ul><br/>
 	<form:form id="inputForm" modelAttribute="szlHrLeave" action="${ctx}/leave/szlHrLeave/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
@@ -16,7 +16,7 @@
 		<div class="control-group">
 			<label class="control-label">工号：</label>
 			<div class="controls">
-				<form:input path="number" htmlEscape="false" maxlength="255" class="input-xlarge required" readonly="true" value="${number}"/>
+				<form:input id="number" path="number" htmlEscape="false" maxlength="255" class="input-xlarge required" readonly="true" value="${number}"/>
 				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
@@ -77,7 +77,8 @@
 			</div>
 		</div>
 		<div class="form-actions">
-			<shiro:hasPermission name="leave:szlHrLeave:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
+			<shiro:hasPermission name="leave:szlHrLeave:edit">
+			<input id="btnSubmit" class="btn btn-primary" type="button" onclick="getHours()" value="提 交"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
@@ -99,7 +100,22 @@ $(document).ready(function() {
 			}
 		}
 	});
-});/*
+});
+function getHours() {
+	
+	var number=$("#number").val();
+	$.ajax({
+		 type : "GET",
+		 url : "${ctx}/leave/szlHrLeave/getHours",
+		 data : {number:number},
+		 dataType: "json",
+			 success : function(data) {
+				 console.log(data)
+				 //$("#inputForm").submit();
+			 }
+	});
+}
+/*
 //计算两个时间相差了几个小时
 function getIntervalHour(startTime,endTime) {
 	var StartTime = new Date(startTime);//将字符串转化为时间

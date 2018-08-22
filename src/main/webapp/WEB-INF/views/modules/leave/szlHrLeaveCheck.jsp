@@ -105,8 +105,8 @@
 				   <c:when test="${szlHrLeave.leaveStatus == '3'}" >      
 					 <a href="${ctx}/leave/szlHrLeave/pass?id=${szlHrLeave.id}" onclick="return confirmx('确认要通过该请假信息吗？', this.href)">通过</a>
 				   </c:when>  
-				   <c:when test="${szlHrLeave.leaveStatus == '2'}" >      
-   					 <a href="${ctx}/leave/szlHrLeave/goout?id=${szlHrLeave.id}">驳回</a>
+				   <c:when test="${szlHrLeave.leaveStatus == '2'}" > 
+				        
 				   </c:when>  
 				   <c:otherwise>  
 					 <a href="${ctx}/leave/szlHrLeave/pass?id=${szlHrLeave.id}" onclick="return confirmx('确认要通过该请假信息吗？', this.href)">通过</a>

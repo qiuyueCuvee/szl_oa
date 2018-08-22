@@ -3,8 +3,10 @@
  */
 package com.thinkgem.jeesite.modules.leave.web;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +24,9 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.holiday.dao.SzlHrHolidayDao;
+import com.thinkgem.jeesite.modules.holiday.entity.SzlHrHoliday;
+import com.thinkgem.jeesite.modules.holiday.service.SzlHrHolidayService;
 import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
 import com.thinkgem.jeesite.modules.leave.service.SzlHrLeaveService;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
@@ -37,6 +42,10 @@ public class SzlHrLeaveController extends BaseController {
 
 	@Autowired
 	private SzlHrLeaveService szlHrLeaveService;
+	@Autowired
+	SzlHrHolidayDao szlHrHolidayDao;
+	@Autowired
+	SzlHrHolidayService szlHrHolidayService;
 	
 	@ModelAttribute
 	public SzlHrLeave get(@RequestParam(required=false) String id) {
@@ -79,7 +88,7 @@ public class SzlHrLeaveController extends BaseController {
 		model.addAttribute("today", today);
 		return "modules/leave/szlHrLeaveForm";
 	}
-
+	
 	@RequiresPermissions("leave:szlHrLeave:edit")
 	@RequestMapping(value = "save")
 	public String save(SzlHrLeave szlHrLeave, Model model, RedirectAttributes redirectAttributes) {
@@ -87,8 +96,7 @@ public class SzlHrLeaveController extends BaseController {
 			return form(szlHrLeave, model);
 		}
 		szlHrLeave.setLeaveStatus("1");		
-		szlHrLeave.setStatusReason("该请假单已经生成，等待领导审核！");	
-		szlHrLeaveService.save(szlHrLeave);
+		szlHrLeave.setStatusReason("该请假单已经生成，等待领导审核！");
 		addMessage(redirectAttributes, "保存请假信息成功");
 		return "redirect:"+Global.getAdminPath()+"/leave/szlHrLeave/?repage";
 	}
@@ -99,6 +107,8 @@ public class SzlHrLeaveController extends BaseController {
 		szlHrLeave.setLeaveStatus("2");		
 		szlHrLeave.setStatusReason("该单据已经通过管理员审核！");		
 		szlHrLeaveService.update(szlHrLeave);
+		
+		
 		addMessage(redirectAttributes, "通过请假单成功！");
 		return "redirect:"+Global.getAdminPath()+"/leave/szlHrLeave/check/?repage";
 	}
@@ -124,6 +134,26 @@ public class SzlHrLeaveController extends BaseController {
 		szlHrLeaveService.delete(szlHrLeave);
 		addMessage(redirectAttributes, "删除请假信息成功");
 		return "redirect:"+Global.getAdminPath()+"/leave/szlHrLeave/?repage";
+	}
+	
+
+	@RequestMapping(value = "getHours")
+	public Map<String, Object> getHours(HttpServletRequest requset,HttpServletResponse response) {
+		String number=requset.getParameter("number");
+		String h1=szlHrHolidayDao.findShiftLeaveNumber(number);
+		String h2=szlHrHolidayDao.findAnnualLeaveNumber(number);
+		int shiftHours=0;
+		int yearHours=0;
+		if(!"".equals(h1)) {
+			shiftHours=Integer.parseInt(h1);//剩余倒休时长
+		}else if(!"".equals(h2)) {
+			yearHours=Integer.parseInt(h2);//剩余年假时长
+		}
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("number", number);
+		map.put("shiftHours", shiftHours);
+		map.put("yearHours", yearHours);
+		return map;
 	}
 
 }
