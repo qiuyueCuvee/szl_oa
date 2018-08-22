@@ -37,14 +37,14 @@
 		<c:when test="${whoami != '系统管理员'}"> 
 		<div class="control-group">
 				<label class="control-label col-sm-4">
-				<span class="required ">*</span>申请人: </label>
+				<span class="required" style="color:red">*</span>申请人: </label>
 			<div class="controls">
 				<form:input path="applicant" htmlEscape="false" maxlength="64" class="input-xlarge form-control required"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label col-sm-4">
-				<span class="required ">*</span>部门：</label>
+				<span class="required" style="color:red">*</span>部门：</label>
 			<div class="controls">
 				<form:select path="department" class="input-xlarge form-control required">
 					<form:option value="" label=""/>
@@ -54,7 +54,7 @@
 		</div>
 		<div class="control-group">
 			<label class="control-label col-sm-4">
-				<span class="required ">*</span>申请事项：</label>
+				<span class="required" style="color:red">*</span>申请事项：</label>
 			<div class="controls">
 				<form:input path="matter" htmlEscape="false" maxlength="64" class="input-xlarge form-control required"/>
 			</div>
@@ -64,6 +64,9 @@
 			<div class="controls">
 				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
 			</div>
+		</div>
+		<div>
+			<form:input type="hidden" path="process" value="0" />
 		</div>
 		</c:when>
 		<c:otherwise>

@@ -67,7 +67,6 @@
 					<th>创建时间</th>
 					<th>更新者</th>
 					<th>更新时间</th>	
-					<th>状态（0正常 1删除 2停用）</th>
 				</c:if>
 				<shiro:hasPermission name="repairmgt:repairmgt:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
@@ -114,9 +113,6 @@
 				</td>
 				<td>
 					<fmt:formatDate value="${repairmgt.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</td>
-				<td>
-					${repairmgt.status}
 				</td>
 				</c:if>
 				<td>
