@@ -6,7 +6,17 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$("#number").val("");
 			
+			$("#btnExport").click(function(){
+				top.$.jBox.confirm("确认要考勤数据吗？","系统提示",function(v,h,f){
+					if(v=="ok"){
+						$("#searchForm").attr("action","${ctx}/hrattence/calendar/export");
+						$("#searchForm").submit();
+					}
+				},{buttonsFocus:1});
+				top.$('.jbox-body .jbox-icon').css('top','55px');
+			});
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -25,12 +35,13 @@
 		  <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>   
 		  <li><label>工号：</label>
-				<form:input path="number" value="0000" htmlEscape="false" maxlength="255" class="input-medium"/>
+				<form:input path="number"  htmlEscape="true" maxlength="255" class="input-medium"/>
 			</li> 
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
-		</ul> 
+			<input id="btnExport" class="btn btn-primary" type="button" value="导出"/>
 	</form:form>
+	
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
@@ -38,23 +49,6 @@
 		</thead>
 		
 		<tbody>
-		<%-- <c:forEach items="${list}" var="map">
-			<tr>
-			<td>
-					 			 ${szlHrAttence.hrStaffName} 
-							</td>
-				<c:forEach var="tmp"  items="${map}" >
-	 					
-		 			    <c:forEach items="${tmp.value}" var="element">  
-		 			      <c:if test="${szlHrAttence.number == tmp.key}">  
-					 		<td>
-					 			 ${element.status} 
-							</td>
-							 </c:if>  
-						</c:forEach>
-	 			</c:forEach>
-			</tr>
-		</c:forEach> --%>
 		</tbody>
 	</table>
 	  <div class="pagination">${page}</div>   

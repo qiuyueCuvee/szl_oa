@@ -49,29 +49,28 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		return attencedao.findAllMonthList(szlHrAttence);
 	}
 	
-	public Page<SzlHrAttence> findPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence) {
-		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
-//		List<SzlHrAttence> list = result.getList();
+	public List<SzlHrAttence> findAttenceList(SzlHrAttence szlHrAttence){
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, -3);
 		c.set(Calendar.DAY_OF_MONTH, 26);
 	
 		SimpleDateFormat dfst = new SimpleDateFormat("yyyy-MM-dd");
+		
+		SimpleDateFormat tfst = new SimpleDateFormat("hh:mm:ss");
 		String begindate = dfst.format(c.getTime());
+		String starttime = tfst.format(c.getTime());
 		Calendar d = Calendar.getInstance();
 		d.add(Calendar.MONTH, -2);
 		d.set(Calendar.DAY_OF_MONTH, 25);
 		String enddate =  dfst.format(d.getTime());
-		
-		/*SzlHrAttence attence	= new SzlHrAttence();
-		attence.setBegindate(begindate);
-		attence.setEnddate(enddate);*/
-//		List<SzlHrAttence> attencelist = attencedao.findAllMonthList(attence);
+		String endtime = tfst.format(d.getTime());
 		
 		szlHrAttence.setBegindate(begindate);
 		szlHrAttence.setEnddate(enddate);
+		szlHrAttence.setStarttime(starttime);
+		szlHrAttence.setEndtime(endtime);
 		List<SzlHrAttence> list = attencedao.findAllMonthList(szlHrAttence);
-		List<SzlHrAttence> reslist = new ArrayList<SzlHrAttence>();
+		
 		for(SzlHrAttence entity:list) {
 			SzlHrStaff hhrStaff = new SzlHrStaff();
 			hhrStaff.setNumber(entity.getNumber());
@@ -79,65 +78,16 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			if(entity.getNumber()!=null) {
 				staff = staffdao.findByNumber(entity.getNumber().toString());
 			}
-			
 			if(staff!=null) {
 				entity.setHrStaffName(staff.getName());
 				entity.setHrStaffDept(staff.getDepartment());
 			}
-		
-			SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
 			String start = entity.getStarttime();
 			String end = entity.getEndtime();
 			
 		    try {
-				  if(staff!=null&&end!=null) {
-					  
-						Date begin=dfs.parse(start);
-						Date after=dfs.parse(end);
-					    Date tmp = dfs.parse("09:00:00");
-					    Date tmp1 = dfs.parse("18:00:00");
-					    long between=(begin.getTime()-tmp.getTime())/1000;
-					    long min=between/60;
-					    String minute = String.valueOf(min);
-					    long between1=(tmp1.getTime()-after.getTime())/1000;
-					    long min1=between1/60;
-					    String minute1 = String.valueOf(min1);
-					    long absenttime=0;
-					    
-					    //latetime
-						if(!"00:00:00".equals(entity.getStarttime())) {
-							entity.setLatetime(minute);
-						}
-						if("00:00:00".equals(entity.getStarttime())||min<0) {
-							min =0;
-							entity.setLatetime("0");
-						}
-						//earlytime
-						if(!"00:00:00".equals(entity.getEndtime())) {
-							entity.setEarlytime(minute1);
-						}
-						if("00:00:00".equals(entity.getEndtime())||min1<0) {
-							min1=0;
-							entity.setEarlytime("0");
-						}
-						//absenttime
-						absenttime = 540-min-min1;
-						entity.setAbsenttime(String.valueOf(absenttime));
-						//sum
-						entity.setSum(String.valueOf(min+min1+absenttime));
-						if(!"00:00:00".equals(entity.getEndtime())&&!"00:00:00".equals(entity.getStarttime())) {
-							absenttime = min+min1;
-							entity.setAbsenttime(String.valueOf(absenttime));
-							//sum
-							entity.setSum(String.valueOf(absenttime));
-						}
-						 if(!"0".equals(entity.getSum())) {
-							reslist.add(entity);
-						} 
-						/* if("0".equals(entity.getSum())) {
-							 attencelist.remove(entity);
-							}*/
-						 
+				  if(start!=null&&end!=null) {
+					    this.parseDate(entity, start, end);
 				  }
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -145,14 +95,45 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			}
 		   
 		}
-		result.setList(reslist);
-//		result.setCount(attencelist.size());
+		return list;
+	}
+	//考勤异常
+	public Page<SzlHrAttence> findPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence) {
+		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
+//		List<SzlHrAttence> list = result.getList();
+		result.setList(findAttenceList(szlHrAttence));
 		return result;
 	}
 	
+	//考勤
+	public List<HashMap> findMonth(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
+		
+		List<HashMap> maplist = new ArrayList<HashMap>();
+		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
+		this.refactorStaff(stafflist, szlHrAttence, maplist);
+		return maplist;
+	}
+	
+	//分页考勤
 	public List<HashMap> findMonthPage(Page<SzlHrAttence> page, SzlHrAttence szlHrAttence,SzlHrStaff szlHrStaff,HttpServletRequest request) throws ParseException {
-//		Page<SzlHrAttence> result= super.findPage(page, szlHrAttence);
-//		List<SzlHrAttence> list = result.getList();
+		
+		List<HashMap> maplist = new ArrayList<HashMap>();
+		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
+		
+		if(stafflist.size()>page.getPageSize()) {
+			if(page.getPageNo()*page.getPageSize()>stafflist.size()) {
+				stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(),stafflist.size());
+			}else {
+				stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(), page.getPageNo()*page.getPageSize());
+			}
+		}
+		
+		this.refactorStaff(stafflist, szlHrAttence, maplist);
+		return maplist;
+	}
+	
+	public  void refactorStaff(List<SzlHrStaff> stafflist,SzlHrAttence szlHrAttence,List<HashMap> maplist){
+		
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, -3);
 		c.set(Calendar.DAY_OF_MONTH, 26);
@@ -163,21 +144,6 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 		d.add(Calendar.MONTH, -2);
 		d.set(Calendar.DAY_OF_MONTH, 25);
 		String enddate =  dfst.format(d.getTime());
-//		SzlHrStaff paramstaff = new SzlHrStaff();
-//		paramstaff.setNumber(request.getParameter("number"));
-		if("0000".equals(szlHrStaff.getNumber())) {
-			szlHrStaff=null;
-		}
-		List<SzlHrStaff> stafflist = staffdao.findstaff(szlHrStaff);
-		if(stafflist.size()>30) {
-			if(page.getPageNo()*page.getPageSize()>stafflist.size()) {
-				stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(),stafflist.size());
-			}else {
-				stafflist = stafflist.subList((page.getPageNo()-1)*page.getPageSize(), page.getPageNo()*page.getPageSize());
-				}
-			}
-		
-		List<HashMap> maplist = new ArrayList<HashMap>();
 		for(SzlHrStaff element:stafflist) {
 			
 			szlHrAttence.setBegindate(begindate);
@@ -186,17 +152,13 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			
 			List<SzlHrAttence> list = attencedao.findMonthList(szlHrAttence);
 			HashMap calendarMap = new HashMap();
-			calendarMap.put(element.getName(), list);
+			calendarMap.put(element.getNumber(), list);
 			maplist.add(calendarMap);
+			
 			for(SzlHrAttence entity:list) {
-				
-//				HashMap calendarMap = new HashMap();
 				SzlHrStaff hhrStaff = new SzlHrStaff();
 				hhrStaff.setNumber(entity.getNumber());
 				SzlHrStaff staff =  null;
-				/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-					calendarMap.put(entity.getDate(), "o");
-				}*/
 				
 				if(entity.getNumber()!=null) {
 					staff = staffdao.findByNumber(entity.getNumber().toString());
@@ -206,92 +168,77 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 					entity.setHrStaffName(staff.getName());
 					entity.setHrStaffDept(staff.getDepartment());
 				}
-			
-				SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
+			 
 				String start = entity.getStarttime();
 				String end = entity.getEndtime();
 				
 			    try {
 					  if(start!=null&&end!=null) {
-						  
-							Date begin=dfs.parse(start);
-							Date after=dfs.parse(end);
-						    Date tmp = dfs.parse("09:00:00");
-						    Date tmp1 = dfs.parse("18:00:00");
-						    long between=(begin.getTime()-tmp.getTime())/1000;
-						    long min=between/60;
-						    String minute = String.valueOf(min);
-						    long between1=(tmp1.getTime()-after.getTime())/1000;
-						    long min1=between1/60;
-						    String minute1 = String.valueOf(min1);
-						    long absenttime=0;
-						    
-						    //latetime
-							if(!"00:00:00".equals(entity.getStarttime())) {
-								entity.setLatetime(minute);
-							}
-							if("00:00:00".equals(entity.getStarttime())||min<0) {
-								min =0;
-								entity.setLatetime("0");
-							}
-							//earlytime
-							if(!"00:00:00".equals(entity.getEndtime())) {
-								entity.setEarlytime(minute1);
-							}
-							if("00:00:00".equals(entity.getEndtime())||min1<0) {
-								min1=0;
-								entity.setEarlytime("0");
-							}
-							//absenttime
-							absenttime = 540-min-min1;
-							entity.setAbsenttime(String.valueOf(absenttime));
-							//sum
-							entity.setSum(String.valueOf(min+min1+absenttime));
-							if(!"00:00:00".equals(entity.getEndtime())&&!"00:00:00".equals(entity.getStarttime())) {
-								absenttime = min+min1;
-								entity.setAbsenttime(String.valueOf(absenttime));
-								//sum
-								entity.setSum(String.valueOf(absenttime));
-							}
-							entity.setStatus(" ");
+						    this.parseDate(entity, start, end);
+						    entity.setStatus(" ");
 							if(Integer.parseInt(entity.getSum())==0) {
 								entity.setStatus("√");
-								/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-									calendarMap.put(entity.getDate(), "√");
-								}*/
 								
 							}
 							if(Integer.parseInt(entity.getLatetime())>0) {
 								entity.setStatus("×");
-								/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-									calendarMap.put(entity.getDate(), "×");
-								}*/
 								
 							}
 							if(Integer.parseInt(entity.getEarlytime())>0) {
 								entity.setStatus("#");
-								/*if(entity.getDate().getTime()>c.getTimeInMillis()&&entity.getDate().getTime()<d.getTimeInMillis()) {
-									calendarMap.put(entity.getDate(), "#");
-								}*/
-								
 							}
-							
 					  }
-		
-		
-//		List<HashMap> calendarMapList = new ArrayList();
-		
-			
-				 /* calendarMapList.add(calendarMap);
-				  entity.setCalendarMapList(calendarMapList);*/
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					  
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			}
+	}
+	
+	public void parseDate(SzlHrAttence entity,String start,String end) throws ParseException {
+		SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
+		Date begin=dfs.parse(start);
+		Date after=dfs.parse(end);
+	    Date tmp = dfs.parse("09:00:00");
+	    Date tmp1 = dfs.parse("18:00:00");
+	    long between=(begin.getTime()-tmp.getTime())/1000;
+	    long min=between/60;
+	    String minute = String.valueOf(min);
+	    long between1=(tmp1.getTime()-after.getTime())/1000;
+	    long min1=between1/60;
+	    String minute1 = String.valueOf(min1);
+	    long absenttime=0;
+	    
+	    //latetime
+		if(!"00:00:00".equals(entity.getStarttime())) {
+			entity.setLatetime(minute);
 		}
+		if("00:00:00".equals(entity.getStarttime())||min<0) {
+			min =0;
+			entity.setLatetime("0");
 		}
-//		result.setList(list);
-		return maplist;
+		//earlytime
+		if(!"00:00:00".equals(entity.getEndtime())) {
+			entity.setEarlytime(minute1);
+		}
+		if("00:00:00".equals(entity.getEndtime())||min1<0) {
+			min1=0;
+			entity.setEarlytime("0");
+		}
+		//absenttime
+		absenttime = 540-min-min1;
+		entity.setAbsenttime(String.valueOf(absenttime));
+		//sum
+		entity.setSum(String.valueOf(min+min1+absenttime));
+		if(!"00:00:00".equals(entity.getEndtime())&&!"00:00:00".equals(entity.getStarttime())) {
+			absenttime = min+min1;
+			entity.setAbsenttime(String.valueOf(absenttime));
+			//sum
+			entity.setSum(String.valueOf(absenttime));
+		}
+		
 	}
 	
 	@Transactional(readOnly = false)

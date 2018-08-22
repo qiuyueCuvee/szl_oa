@@ -6,7 +6,15 @@
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$("#btnExport").click(function(){
+				top.$.jBox.confirm("确认要导出考情异常数据吗？","系统提示",function(v,h,f){
+					if(v=="ok"){
+						$("#searchForm").attr("action","${ctx}/hrattence/szlHrAttence/export");
+						$("#searchForm").submit();
+					}
+				},{buttonsFocus:1});
+				top.$('.jbox-body .jbox-icon').css('top','55px');
+			});
 		});
 		function page(n,s){
 			$("#pageNo").val(n);
@@ -24,13 +32,12 @@
 	 <form:form id="searchForm" modelAttribute="szlHrAttence" action="${ctx}/hrattence/szlHrAttence/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-		 <ul class="ul-form">
 		 <li><label>工号：</label>
 				<form:input path="number" htmlEscape="false" maxlength="255" class="input-medium"/>
 			</li>
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
-		</ul>   
+			<input id="btnExport" class="btn btn-primary" type="button" value="导出"/>
 	</form:form>
 	
 	<sys:message content="${message}"/>
@@ -44,11 +51,12 @@
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>日期</th></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>上班</th></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>下班</th></shiro:hasPermission>
-				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>备注</th></shiro:hasPermission>
+				
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>迟到时间</th></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>早退时间</th></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>缺勤时间</th></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>合计</th></shiro:hasPermission>
+				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>备注</th></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><th>操作</th></shiro:hasPermission>
 				
 			</tr>
@@ -75,9 +83,7 @@
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><td>
 				 ${szlHrAttence.endtime} 
 				</td></shiro:hasPermission>
-				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><td>
-				 ${szlHrAttence.remark} 
-				</td></shiro:hasPermission>
+				
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><td>
 				 ${szlHrAttence.latetime} 
 				</td></shiro:hasPermission>
@@ -89,6 +95,9 @@
 				</td></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><td>
 				 ${szlHrAttence.sum} 
+				</td></shiro:hasPermission>
+				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><td>
+				 ${szlHrAttence.remark} 
 				</td></shiro:hasPermission>
 				<shiro:hasPermission name="hrattence:szlHrAttence:edit"><td>
     				<a href="${ctx}/hrattence/szlHrAttence/form?id=${szlHrAttence.id}">修改</a>
