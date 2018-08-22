@@ -3,8 +3,8 @@
  */
 package com.thinkgem.jeesite.common.service;
 
-import java.util.List;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,6 +78,15 @@ public abstract class CrudService<D extends CrudDao<T>, T extends DataEntity<T>>
 			entity.preUpdate();
 			dao.update(entity);
 		}
+	}
+	/**
+	 * 更新数据更新
+	 * @param entity
+	 */
+	@Transactional(readOnly = false)
+	public void update(T entity) {
+			entity.preUpdate();
+			dao.update(entity);
 	}
 	
 	/**
