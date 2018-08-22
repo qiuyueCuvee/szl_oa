@@ -48,7 +48,7 @@
 			<div class="controls">
 				<form:select path="department" class="input-xlarge form-control required">
 					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('department')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('szl_dept')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>
@@ -76,15 +76,18 @@
 		<div class="control-group">
 			<label class="control-label">处理进程：</label>
 			<div class="controls">
-				<form:input path="process" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:select path="process" class="input-xlarge" >
+					<form:option value="" label=""/>
+					<form:options items="${fns:getDictList('process')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">解决日期：</label>
 			<div class="controls">
-				<input name="donedate" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate "
-					value="<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd HH:mm:ss"/>"
-					onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false});"/>
+				<input name="donedate" type="text" maxlength="20" class="input-xlarge Wdate "
+					value="<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd"/>"
+					onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});"/>
 			</div>
 		</div>
 		<div class="control-group">

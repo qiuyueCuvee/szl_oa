@@ -33,11 +33,14 @@
 			<li><label>部门：</label>
 				<form:select path="department" class="input-medium">
 					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('department')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('szl_dept')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>
 			<li><label>处理进程：</label>
-				<form:input path="process" htmlEscape="false" maxlength="64" class="input-medium"/>
+				<form:select path="process" class="input-medium">
+					<form:option value="" label=""/>
+					<form:options items="${fns:getDictList('process')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
 			</li>
 			<li><label>受理人：</label>
 				<form:input path="receiver" htmlEscape="false" maxlength="64" class="input-medium"/>
@@ -79,13 +82,13 @@
 					${repairmgt.applicant}
 				</td>
 				<td>
-					${fns:getDictLabel(repairmgt.department, 'department', '')}
+					${fns:getDictLabel(repairmgt.department, 'szl_dept', '')}
 				</td>
 				<td>
 					${repairmgt.matter}
 				</td>
 				<td>
-					${repairmgt.process}
+					${fns:getDictLabel(repairmgt.process, 'process', '')}
 				</td>
 				<td>
 					${repairmgt.receiver}
@@ -94,7 +97,7 @@
 					${repairmgt.solution}
 				</td>
 				<td>
-					<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd"/>
 				</td>
 				<td>
 					${repairmgt.remarks}
@@ -134,7 +137,6 @@
 		</c:forEach>
 		</tbody>
 	</table> 
-
 	<div class="pagination">${page}</div>
 </body>
 </html>
