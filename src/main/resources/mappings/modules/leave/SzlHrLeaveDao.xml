@@ -108,9 +108,9 @@
 			#{leaveRemark},
 			#{leaveStatus},
 			#{statusReason},
-			#{createBy.id},
+			#{createBy.loginName},
 			#{createDate},
-			#{updateBy.id},
+			#{updateBy.loginName},
 			#{updateDate},
 			#{delFlag}
 		)
@@ -127,7 +127,7 @@
 			leave_remark = #{leaveRemark},
 			leave_status = #{leaveStatus},
 			status_reason = #{statusReason},
-			update_by = #{updateBy.id},
+			update_by = #{updateBy.loginName},
 			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>

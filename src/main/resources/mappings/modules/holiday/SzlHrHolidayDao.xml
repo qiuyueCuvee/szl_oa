@@ -84,9 +84,9 @@
 			#{number},
 			#{shiftLeave},
 			#{annualLeave},
-			#{createBy.id},
+			#{createBy.loginName},
 			#{createDate},
-			#{updateBy.id},
+			#{updateBy.loginName},
 			#{updateDate},
 			#{delFlag}
 		)
@@ -97,7 +97,7 @@
 			number = #{number},
 			shift_leave = #{shiftLeave},
 			annual_leave = #{annualLeave},
-			update_by = #{updateBy.id},
+			update_by = #{updateBy.loginName},
 			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>

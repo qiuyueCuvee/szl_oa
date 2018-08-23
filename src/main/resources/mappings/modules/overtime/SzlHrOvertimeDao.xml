@@ -103,10 +103,10 @@
 			#{workHours},
 			#{workContent},
 			#{overtimeRemark},
-			#{createBy.id},
+			#{createBy.loginName},
 			#{overtimeStatus},
 			#{createDate},
-			#{updateBy.id},
+			#{updateBy.loginName},
 			#{statusReason},
 			#{updateDate},
 			#{delFlag}
@@ -123,7 +123,7 @@
 			work_content = #{workContent},
 			overtime_remark = #{overtimeRemark},
 			overtime_status = #{overtimeStatus},
-			update_by = #{updateBy.id},
+			update_by = #{updateBy.loginName},
 			status_reason = #{statusReason},
 			update_date = #{updateDate}
 		WHERE id = #{id}

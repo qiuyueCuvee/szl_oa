@@ -3,7 +3,9 @@
  */
 package com.thinkgem.jeesite.modules.declare.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,7 @@ import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.declare.entity.SlzDeclareinfo;
 import com.thinkgem.jeesite.modules.declare.service.SlzDeclareinfoService;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 
 /**
  * declareController
@@ -53,6 +56,18 @@ public class SlzDeclareinfoController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SlzDeclareinfo slzDeclareinfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SlzDeclareinfo> page = slzDeclareinfoService.findPage(new Page<SlzDeclareinfo>(request, response), slzDeclareinfo); 
+		//普通用户只显示该用户创建的条目
+		User user = slzDeclareinfo.getCurrentUser();
+		if (!user.getName().equals("系统管理员")){
+			List<SlzDeclareinfo> list = page.getList();
+			List<SlzDeclareinfo> reslist =new ArrayList<SlzDeclareinfo>();
+			for(SlzDeclareinfo obj:list){
+				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+					reslist.add(obj);
+				}	
+			}
+			page.setList(reslist);
+		}
 		model.addAttribute("page", page);
 		return "modules/declare/slzDeclareinfoList";
 	}
