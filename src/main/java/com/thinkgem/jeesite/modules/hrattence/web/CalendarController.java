@@ -170,7 +170,7 @@ public class CalendarController extends BaseController{
 				leavehour +=Long.valueOf(element.getLeaveHours());
 			}
 			html.append("<td>");
-			html.append(leavehour);
+			html.append(leavehour/8);
 			html.append("</td>");
 			long workdays = maxCols-calendar.size()-leavehour/8;
 			html.append("<td>");
