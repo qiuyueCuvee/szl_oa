@@ -106,7 +106,7 @@
 			#{status},
 			#{createBy.loginName},
 			#{createDate},
-			#{updateBy.id},
+			#{updateBy.loginName},
 			#{updateDate},
 			#{remarks},
 			#{delFlag}

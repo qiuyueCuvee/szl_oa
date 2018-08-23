@@ -59,11 +59,11 @@
 				<th>申请人</th>
 				<th>部门</th>
 				<th>申请事项</th>
-				<th>处理进程</th>	
+				<th style="width:15%;">备注信息</th>
 				<th>受理人</th> 
+				<th>处理进程</th>	
 				<th style="width:18%;">解决方案</th>
 				<th>解决日期</th>
-				<th style="width:15%;">备注信息</th>
 				<c:if test="${whoami=='系统管理员'}">
 					<th>创建者</th>
 					<th>创建时间</th>
@@ -88,20 +88,20 @@
 				<td>
 					${repairmgt.matter}
 				</td>
-				<td>
-					${fns:getDictLabel(repairmgt.process, 'process', '')}
+				<td style="width:15%;">
+					${repairmgt.remarks}
 				</td>
 				<td>
 					${repairmgt.receiver}
+				</td>
+				<td>
+					${fns:getDictLabel(repairmgt.process, 'process', '')}
 				</td>
 				<td style="width:18%;">
 					${repairmgt.solution}
 				</td>
 				<td style="white-space:nowrap;">
 					<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd"/>
-				</td>
-				<td style="width:15%;">
-					${repairmgt.remarks}
 				</td>
 				<c:if test="${whoami=='系统管理员'}">
 				<td>
@@ -120,14 +120,16 @@
 				<td style="white-space:nowrap;">
 					<c:choose>	
 						<c:when test="${repairmgt.process > 0}"> 
-							<a href="${ctx}/repairmgt/repairmgt/form?id=${repairmgt.id}">修改</a>
+							<c:if test="${whoami != '普通用户'}">
+								<a href="${ctx}/repairmgt/repairmgt/form?id=${repairmgt.id}">修改</a>
+							</c:if>
 							<c:if test="${whoami == '系统管理员'}">
 								<a href="${ctx}/repairmgt/repairmgt/delete?id=${repairmgt.id}" onclick="return confirmx('确认要删除该报修信息吗？', this.href)">删除</a>
 							</c:if>
 						</c:when>
 						<c:otherwise>
-		    				<a href="${ctx}/repairmgt/repairmgt/form?id=${repairmgt.id}">修改</a>
-		    				<c:if test="${whoami != '信息部管理员'}">
+							<a href="${ctx}/repairmgt/repairmgt/form?id=${repairmgt.id}">修改</a>
+							<c:if test="${whoami != '信息部管理员'}">
 								<a href="${ctx}/repairmgt/repairmgt/delete?id=${repairmgt.id}" onclick="return confirmx('确认要删除该报修信息吗？', this.href)">删除</a>
 							</c:if>
 						</c:otherwise>
