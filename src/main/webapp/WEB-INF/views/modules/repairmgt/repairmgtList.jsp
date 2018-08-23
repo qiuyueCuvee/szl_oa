@@ -33,11 +33,16 @@
 			<li><label>部门：</label>
 				<form:select path="department" class="input-medium">
 					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('department')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:option value=""> </form:option>
+					<form:options items="${fns:getDictList('szl_dept')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>
 			<li><label>处理进程：</label>
-				<form:input path="process" htmlEscape="false" maxlength="64" class="input-medium"/>
+				<form:select path="process" class="input-medium">
+					<form:option value="" label=""/>
+					<form:option value=""> </form:option>
+					<form:options items="${fns:getDictList('process')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
 			</li>
 			<li><label>受理人：</label>
 				<form:input path="receiver" htmlEscape="false" maxlength="64" class="input-medium"/>
@@ -64,7 +69,6 @@
 					<th>创建时间</th>
 					<th>更新者</th>
 					<th>更新时间</th>	
-					<th>状态（0正常 1删除 2停用）</th>
 				</c:if>
 				<shiro:hasPermission name="repairmgt:repairmgt:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
@@ -75,17 +79,17 @@
 				<td><a href="${ctx}/repairmgt/repairmgt/form?id=${repairmgt.id}">
 					${repairmgt.id}
 				</a></td>
-				<td>
+				<td style="white-space:nowrap;">
 					${repairmgt.applicant}
 				</td>
-				<td>
-					${fns:getDictLabel(repairmgt.department, 'department', '')}
+				<td style="white-space:nowrap;">
+					${fns:getDictLabel(repairmgt.department, 'szl_dept', '')}
 				</td>
 				<td>
 					${repairmgt.matter}
 				</td>
 				<td>
-					${repairmgt.process}
+					${fns:getDictLabel(repairmgt.process, 'process', '')}
 				</td>
 				<td>
 					${repairmgt.receiver}
@@ -93,8 +97,8 @@
 				<td>
 					${repairmgt.solution}
 				</td>
-				<td>
-					<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				<td style="white-space:nowrap;">
+					<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd"/>
 				</td>
 				<td>
 					${repairmgt.remarks}
@@ -112,11 +116,8 @@
 				<td>
 					<fmt:formatDate value="${repairmgt.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
-				<td>
-					${repairmgt.status}
-				</td>
 				</c:if>
-				<td>
+				<td style="white-space:nowrap;">
 					<c:choose>	
 						<c:when test="${repairmgt.process > 0}"> 
 							<c:if test="${whoami == '系统管理员'}">
@@ -134,7 +135,6 @@
 		</c:forEach>
 		</tbody>
 	</table> 
-
 	<div class="pagination">${page}</div>
 </body>
 </html>

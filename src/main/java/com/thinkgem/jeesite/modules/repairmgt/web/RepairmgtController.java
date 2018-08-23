@@ -62,9 +62,9 @@ public class RepairmgtController extends BaseController {
 		{
 			List<Repairmgt> list = page.getList();
 			List<Repairmgt> reslist =new ArrayList<Repairmgt>();
-			System.out.println("!!!!!" + usr.getId());	
+
 			for(Repairmgt obj:list) {
-				if(usr.getId().equals(obj.getCreateBy().getId())) {
+				if(usr.getLoginName().equals(obj.getCreateBy().getId())) {
 					reslist.add(obj);
 				}	
 			}

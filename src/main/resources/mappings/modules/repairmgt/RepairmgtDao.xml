@@ -56,7 +56,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.id DESC
 			</otherwise>
 		</choose>
 	</select>
@@ -74,14 +74,13 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
-				ORDER BY a.update_date DESC
+				ORDER BY a.id DESC
 			</otherwise>
 		</choose>
 	</select>
 	
 	<insert id="insert">
 		INSERT INTO szl_repairmgt(
-		
 			applicant,
 			department,
 			matter,
@@ -97,7 +96,6 @@
 			remarks,
 			del_flag
 		) VALUES (
-	
 			#{applicant},
 			#{department},
 			#{matter},
@@ -106,7 +104,7 @@
 			#{solution},
 			#{donedate},
 			#{status},
-			#{createBy.id},
+			#{createBy.loginName},
 			#{createDate},
 			#{updateBy.id},
 			#{updateDate},
@@ -125,7 +123,7 @@
 			solution = #{solution},
 			donedate = #{donedate},
 			status = #{status},
-			update_by = #{updateBy.id},
+			update_by = #{updateBy.loginName},
 			update_date = #{updateDate},
 			remarks = #{remarks}
 		WHERE id = #{id}
