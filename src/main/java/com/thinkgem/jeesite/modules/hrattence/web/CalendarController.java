@@ -164,7 +164,11 @@ public class CalendarController extends BaseController{
 			szlHrLeave.setNumber(key.toString());
 			szlHrLeave.setBegindate(begindate);
 			szlHrLeave.setEnddate(enddate);
+			szlHrLeave.setLeaveType("3");
 			List<SzlHrLeave> leavelist = szlHrLeaveService.findAllMonthList(szlHrLeave);
+			szlHrLeave.setLeaveType("4");
+			List<SzlHrLeave> leavelist1 = szlHrLeaveService.findAllMonthList(szlHrLeave);
+			leavelist.addAll(leavelist1);
 			long leavehour = 0l;
 			for(SzlHrLeave element:leavelist) {
 				leavehour +=Long.valueOf(element.getLeaveHours());

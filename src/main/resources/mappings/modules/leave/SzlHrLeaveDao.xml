@@ -40,7 +40,9 @@
 		<![CDATA[     a.apply_time >= str_to_date(#{begindate},"%Y-%m-%d")  
 			and a.apply_time <= str_to_date(#{enddate},"%Y-%m-%d") 
 			]]>  
-			
+			<if test="leaveType != null and leaveType != ''">
+				AND a.leave_type = #{leaveType}
+			</if>
 			<if test="number != null and number != ''">
 				AND a.number = #{number}
 			</if>

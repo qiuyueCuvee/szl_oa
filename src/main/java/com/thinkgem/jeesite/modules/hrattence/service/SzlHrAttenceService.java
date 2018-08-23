@@ -21,6 +21,8 @@ import com.thinkgem.jeesite.modules.hrattence.dao.SzlHrAttenceDao;
 import com.thinkgem.jeesite.modules.hrattence.dao.SzlHrStaffDao;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrAttence;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrStaff;
+import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
+import com.thinkgem.jeesite.modules.leave.service.SzlHrLeaveService;
 
 /**
  * hrattenceService
@@ -36,6 +38,9 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 	
 	@Autowired
 	private SzlHrAttenceDao  attencedao;
+	
+	@Autowired
+	private SzlHrLeaveService szlHrLeaveService;
 	
 	public SzlHrAttence get(String id) {
 		return super.get(id);
@@ -188,6 +193,22 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 								entity.setStatus("#");
 							}
 					  }
+					  SzlHrLeave szlHrLeave = new SzlHrLeave();
+					  szlHrLeave.setNumber(entity.getNumber());
+					  szlHrLeave.setBegindate(begindate);
+					  szlHrLeave.setEnddate(enddate);
+					  szlHrLeave.setLeaveType("1");
+					  parseHoliday(entity,szlHrLeave);
+					  szlHrLeave.setLeaveType("2");
+					  parseHoliday(entity,szlHrLeave);
+					  szlHrLeave.setLeaveType("3");
+					  parseHoliday(entity,szlHrLeave);
+					  szlHrLeave.setLeaveType("4");
+					  parseHoliday(entity,szlHrLeave);
+					  szlHrLeave.setLeaveType("5");
+					  parseHoliday(entity,szlHrLeave);
+					  szlHrLeave.setLeaveType("6");
+					  parseHoliday(entity,szlHrLeave);
 					  
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -197,6 +218,60 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 			}
 	}
 	
+	public void parseHoliday(SzlHrAttence entity,SzlHrLeave szlHrLeave) throws ParseException {
+		SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+		List<SzlHrLeave>  list = szlHrLeaveService.findAllMonthList(szlHrLeave);
+		List<Calendar> lDate = new ArrayList<Calendar>();
+	    for(SzlHrLeave element:list) {
+	    	    String stardate = element.getStartTime();
+		        String enddate = element.getEndTime();
+		        Date begin=dfs.parse(stardate);
+			    Date after=dfs.parse(enddate);
+				Calendar start = Calendar.getInstance();
+				start.setTime(begin);
+				Calendar end = Calendar.getInstance();
+				end.setTime(after);
+				lDate.add(start); 
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(begin);
+				while (true) {
+					cal.add(Calendar.DAY_OF_MONTH, 1);
+					Calendar tmp = Calendar.getInstance();
+					tmp.setTime(cal.getTime());
+					if (after.after(cal.getTime())) {
+						lDate.add(tmp);
+					} else {
+						break;
+					}
+				}
+				lDate.add(end); 
+	    }
+	    for(Calendar date:lDate) {
+	    	if(entity.getDate().equals(date.get(Calendar.DAY_OF_MONTH))) {
+	    		if(szlHrLeave.equals("1")) {
+	    			entity.setStatus("◻");
+	    		}
+	    		if(szlHrLeave.equals("2")) {
+	    			entity.setStatus("年假");
+	    		}
+	    		if(szlHrLeave.equals("3")) {
+	    			entity.setStatus("△");
+	    		}
+	    		if(szlHrLeave.equals("4")) {
+	    			entity.setStatus("*");
+	    		}
+	    		if(szlHrLeave.equals("5")) {
+	    			entity.setStatus("婚假");
+	    		}
+	    		if(szlHrLeave.equals("6")) {
+	    			entity.setStatus("丧假");
+	    		}
+	    		
+	    	}
+	    }
+		
+		
+	}
 	public void parseDate(SzlHrAttence entity,String start,String end) throws ParseException {
 		SimpleDateFormat dfs = new SimpleDateFormat("HH:mm:ss");
 		Date begin=dfs.parse(start);
