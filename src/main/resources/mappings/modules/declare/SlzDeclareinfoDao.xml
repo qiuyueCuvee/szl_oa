@@ -123,9 +123,9 @@
 			#{declareRemark},
 			#{declareStatus},
 			#{statusReason},
-			#{createBy.id},
+			#{createBy.loginName},
 			#{createDate},
-			#{updateBy.id},
+			#{updateBy.loginName},
 			#{updateDate},
 			#{delFlag}
 		)
@@ -142,7 +142,7 @@
 			declare_remark = #{declareRemark},
 			declare_status = #{declareStatus},
 			status_reason = #{statusReason},
-			update_by = #{updateBy.id},
+			update_by = #{updateBy.loginName},
 			update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>

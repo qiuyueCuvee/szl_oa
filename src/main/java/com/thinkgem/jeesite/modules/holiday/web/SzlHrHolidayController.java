@@ -3,8 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.holiday.web;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
@@ -50,6 +47,8 @@ public class SzlHrHolidayController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SzlHrHoliday szlHrHoliday, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrHoliday> page = szlHrHolidayService.findPage(new Page<SzlHrHoliday>(request, response), szlHrHoliday); 
+		
+		
 		model.addAttribute("page", page);
 		return "modules/holiday/szlHrHolidayList";
 	}
