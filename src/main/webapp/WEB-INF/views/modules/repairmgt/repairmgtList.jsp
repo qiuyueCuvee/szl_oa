@@ -33,12 +33,14 @@
 			<li><label>部门：</label>
 				<form:select path="department" class="input-medium">
 					<form:option value="" label=""/>
+					<form:option value=""> </form:option>
 					<form:options items="${fns:getDictList('szl_dept')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>
 			<li><label>处理进程：</label>
 				<form:select path="process" class="input-medium">
 					<form:option value="" label=""/>
+					<form:option value=""> </form:option>
 					<form:options items="${fns:getDictList('process')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</li>
@@ -77,10 +79,10 @@
 				<td><a href="${ctx}/repairmgt/repairmgt/form?id=${repairmgt.id}">
 					${repairmgt.id}
 				</a></td>
-				<td>
+				<td style="white-space:nowrap;">
 					${repairmgt.applicant}
 				</td>
-				<td>
+				<td style="white-space:nowrap;">
 					${fns:getDictLabel(repairmgt.department, 'szl_dept', '')}
 				</td>
 				<td>
@@ -95,7 +97,7 @@
 				<td>
 					${repairmgt.solution}
 				</td>
-				<td>
+				<td style="white-space:nowrap;">
 					<fmt:formatDate value="${repairmgt.donedate}" pattern="yyyy-MM-dd"/>
 				</td>
 				<td>
@@ -115,7 +117,7 @@
 					<fmt:formatDate value="${repairmgt.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				</c:if>
-				<td>
+				<td style="white-space:nowrap;">
 					<c:choose>	
 						<c:when test="${repairmgt.process > 0}"> 
 							<c:if test="${whoami == '系统管理员'}">

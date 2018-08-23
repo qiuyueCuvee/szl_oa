@@ -96,7 +96,7 @@
 		<div class="control-group">
 			<label class="control-label">解决方案：</label>
 			<div class="controls">
-				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
+				<form:textarea path="solution" htmlEscape="false" rows="4" maxlength="500" class="input-xxlarge "/>
 			</div>
 		</div>
 		</c:otherwise>
