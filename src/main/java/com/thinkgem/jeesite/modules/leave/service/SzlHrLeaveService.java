@@ -27,6 +27,9 @@ public class SzlHrLeaveService extends CrudService<SzlHrLeaveDao, SzlHrLeave> {
 	@Autowired
 	private SzlHrStaffDao staffdao;
 	
+	@Autowired
+	private SzlHrLeaveDao szlHrLeaveDao;
+	
 	public SzlHrLeave get(String id) {
 		return super.get(id);
 	}
@@ -49,6 +52,10 @@ public class SzlHrLeaveService extends CrudService<SzlHrLeaveDao, SzlHrLeave> {
 			}
 		}
 		return result;
+	}
+	
+	public List<SzlHrLeave> findAllMonthList(SzlHrLeave szlHrLeave){
+		return szlHrLeaveDao.findAllMonthList(szlHrLeave);
 	}
 	
 	@Transactional(readOnly = false)

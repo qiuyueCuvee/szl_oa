@@ -27,7 +27,25 @@ public class SzlHrLeave extends DataEntity<SzlHrLeave> {
 	private String statusReason;		// 状态原因
 	private  String  hrStaffName ;
 	private  String  hrStaffDept ;	
+	private String begindate;
+	private String enddate;
 	
+	public String getBegindate() {
+		return begindate;
+	}
+
+	public void setBegindate(String begindate) {
+		this.begindate = begindate;
+	}
+
+	public String getEnddate() {
+		return enddate;
+	}
+
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
+
 	public SzlHrLeave() {
 		super();
 	}
