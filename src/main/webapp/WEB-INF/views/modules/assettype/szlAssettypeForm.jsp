@@ -103,19 +103,19 @@
 	<form:form id="inputForm" modelAttribute="szlAssettype" action="${ctx}/assettype/szlAssettype/save" method="post" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
-		<div class="control-group">
-			<label class="control-label">资产类型：</label>
-			<div class="controls">
-				<form:select path="title"    htmlEscape="false" maxlength="255" class="input-xlarge ">
+		<div >
+			<span >资产类型：</span>
+			<span >
+				<form:select path="title"    htmlEscape="false"  class="input-xlarge ">
 					<form:option value=" " label="请选择"/>
 					<form:option value="电脑" label="电脑"/>
 					<%-- <form:options items="${fns:getDictList('asset_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/> --%>
 					<form:option value="u盘" label="u盘"/>					
 				</form:select>
-			</div>
+			</span>
 			
 		</div>
-			<div class="col-sm-5" id="info">
+			<div class="control-group" id="info">
 			</div>
 			
 		<div class="form-actions">
