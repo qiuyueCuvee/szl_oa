@@ -21,14 +21,14 @@
 		<li class="active"><a href="${ctx}/assetinfo/szlAssetinfo/listData">资产管理列表</a></li>
 		<%-- <shiro:hasPermission name="assetinfo:szlAssetinfo:edit"><li><a href="${ctx}/assetinfo/szlAssetinfo/form">assetinfo添加</a></li></shiro:hasPermission> --%>
 	</ul>
-	<form:form id="searchForm" modelAttribute="szlAssetinfo" action="${ctx}/assetinfo/szlAssetinfo/" method="post" class="breadcrumb form-search">
+	<%-- <form:form id="searchForm" modelAttribute="szlAssetinfo" action="${ctx}/assetinfo/szlAssetinfo/" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
 			<li class="btns"><input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/></li>
 			<li class="clearfix"></li>
 		</ul>
-	</form:form>
+	</form:form> --%>
 	<sys:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
