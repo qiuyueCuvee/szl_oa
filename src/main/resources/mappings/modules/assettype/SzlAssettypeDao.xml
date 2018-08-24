@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.assettype.dao.SzlAssettypeDao">
+    
+	<sql id="szlAssettypeColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.template AS "template"
+	</sql>
+	
+	<sql id="szlAssettypeJoins">
+	</sql>
+    
+	<select id="get" resultType="SzlAssettype">
+		SELECT 
+			<include refid="szlAssettypeColumns"/>
+		FROM szl_assettype a
+		<include refid="szlAssettypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SzlAssettype">
+		SELECT 
+			<include refid="szlAssettypeColumns"/>
+		FROM szl_assettype a
+		<include refid="szlAssettypeJoins"/>
+		<where>
+			
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SzlAssettype">
+		SELECT 
+			<include refid="szlAssettypeColumns"/>
+		FROM szl_assettype a
+		<include refid="szlAssettypeJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO szl_assettype(
+			id,
+			title,
+			template
+		) VALUES (
+			#{id},
+			#{title},
+			#{template}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE szl_assettype SET 	
+			title = #{title},
+			template = #{template}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM szl_assettype
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
