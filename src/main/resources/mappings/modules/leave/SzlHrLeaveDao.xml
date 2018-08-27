@@ -32,6 +32,23 @@
 		WHERE a.id = #{id}
 	</select>
 	
+	<select id="findAllMonthList" resultType="SzlHrLeave">
+		SELECT 
+			<include refid="szlHrLeaveColumns"/>
+		FROM szl_hr_leave a
+		<where>
+		<![CDATA[     a.apply_time >= str_to_date(#{begindate},"%Y-%m-%d")  
+			and a.apply_time <= str_to_date(#{enddate},"%Y-%m-%d") 
+			]]>  
+			<if test="leaveType != null and leaveType != ''">
+				AND a.leave_type = #{leaveType}
+			</if>
+			<if test="number != null and number != ''">
+				AND a.number = #{number}
+			</if>
+			</where>
+	</select>
+	
 	<select id="findList" resultType="SzlHrLeave">
 		SELECT 
 			<include refid="szlHrLeaveColumns"/>

@@ -29,10 +29,13 @@ import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.DateUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.holiday.dao.SzlHrHolidayDao;
 import com.thinkgem.jeesite.modules.hrattence.dao.SzlHrStaffDao;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrAttence;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrStaff;
 import com.thinkgem.jeesite.modules.hrattence.service.SzlHrAttenceService;
+import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
+import com.thinkgem.jeesite.modules.leave.service.SzlHrLeaveService;
 import com.thinkgem.jeesite.modules.overtime.entity.SzlHrOvertime;
 import com.thinkgem.jeesite.modules.overtime.service.SzlHrOvertimeService;
 
@@ -48,6 +51,12 @@ public class CalendarController extends BaseController{
 	
 	@Autowired
 	private SzlHrOvertimeService overtimeService;
+	
+	@Autowired
+	private SzlHrHolidayDao szlHrHolidayDaos;
+	
+	@Autowired
+	private SzlHrLeaveService szlHrLeaveService;
 	
 	@RequestMapping(value = "list")
 	public String list(SzlHrAttence szlHrAttence,HttpServletRequest request, HttpServletResponse response, Model model) throws ParseException {
@@ -143,8 +152,40 @@ public class CalendarController extends BaseController{
 			html.append("<td>");
 			html.append(hours);
 			html.append("</td>");
+			String shiftLeave = szlHrHolidayDaos.findShiftLeaveNumber(key.toString());
+			if(shiftLeave==null) {
+				shiftLeave = "0";
+			}
+			html.append("<td>");
+			html.append(shiftLeave);
+			html.append("</td>");
+			
+			SzlHrLeave szlHrLeave = new SzlHrLeave();
+			szlHrLeave.setNumber(key.toString());
+			szlHrLeave.setBegindate(begindate);
+			szlHrLeave.setEnddate(enddate);
+			szlHrLeave.setLeaveType("3");
+			List<SzlHrLeave> leavelist = szlHrLeaveService.findAllMonthList(szlHrLeave);
+			szlHrLeave.setLeaveType("4");
+			List<SzlHrLeave> leavelist1 = szlHrLeaveService.findAllMonthList(szlHrLeave);
+			leavelist.addAll(leavelist1);
+			long leavehour = 0l;
+			for(SzlHrLeave element:leavelist) {
+				leavehour +=Long.valueOf(element.getLeaveHours());
+			}
+			html.append("<td>");
+			html.append(leavehour/8);
+			html.append("</td>");
+			long workdays = maxCols-calendar.size()-leavehour/8;
+			html.append("<td>");
+			html.append(workdays);
+			html.append("</td>");
+			html.append("<td>");
+			html.append("");
+			html.append("</td>");
 			html.append("</tr>");
 			}
+			
 			
 		}
 		

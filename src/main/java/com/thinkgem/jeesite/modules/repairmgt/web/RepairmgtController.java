@@ -58,7 +58,13 @@ public class RepairmgtController extends BaseController {
 		User usr = repairmgt.getCurrentUser();
 		Page<Repairmgt> page = repairmgtService.findPage(new Page<Repairmgt>(request, response), repairmgt); 
 		
-		if (!usr.getName().equals("系统管理员"))      //普通用户只显示该用户创建的条目
+		String roleName = usr.getRoleNames();
+		if (usr.getName().equals("系统管理员"))
+		{
+			roleName = roleName.substring(roleName.indexOf(",") + 1);
+		}
+		
+		if (roleName.equals("普通用户"))      //普通用户只显示该用户创建的条目
 		{
 			List<Repairmgt> list = page.getList();
 			List<Repairmgt> reslist =new ArrayList<Repairmgt>();
@@ -70,9 +76,9 @@ public class RepairmgtController extends BaseController {
 			}
 			page.setList(reslist);
 		}
-		
+
 		model.addAttribute("page", page);
-		model.addAttribute("whoami", UserUtils.getUser().getName());
+		model.addAttribute("whoami", roleName);
 		
 		return "modules/repairmgt/repairmgtList";
 	}
@@ -81,7 +87,7 @@ public class RepairmgtController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(Repairmgt repairmgt, Model model) {
 		model.addAttribute("repairmgt", repairmgt);
-		model.addAttribute("whoami", UserUtils.getUser().getName());
+		model.addAttribute("whoami", UserUtils.getUser().getRoleNames());
 		return "modules/repairmgt/repairmgtForm";
 	}
 

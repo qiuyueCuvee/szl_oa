@@ -2,12 +2,12 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-	<title>hrattence管理</title>
+	<title>考勤异常管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#btnExport").click(function(){
-				top.$.jBox.confirm("确认要导出考情异常数据吗？","系统提示",function(v,h,f){
+				top.$.jBox.confirm("确认要导出考勤异常数据吗？","系统提示",function(v,h,f){
 					if(v=="ok"){
 						$("#searchForm").attr("action","${ctx}/hrattence/szlHrAttence/export");
 						$("#searchForm").submit();

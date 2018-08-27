@@ -3,6 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.leave.dao;
 
+import java.util.List;
+
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
@@ -14,5 +16,6 @@ import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
  */
 @MyBatisDao
 public interface SzlHrLeaveDao extends CrudDao<SzlHrLeave> {
+	public List<SzlHrLeave> findAllMonthList(SzlHrLeave szlHrLeave);
 	
 }

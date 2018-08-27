@@ -49,8 +49,11 @@
 		</thead>
 		
 		<tbody>
+		
 		</tbody>
+		
 	</table>
+	√出勤    ×迟到    #早退    △事假    *病假(年假、婚假、丧假具体标注)   ◻倒休
 	  <div class="pagination">${page}</div>   
 </body>
 </html>

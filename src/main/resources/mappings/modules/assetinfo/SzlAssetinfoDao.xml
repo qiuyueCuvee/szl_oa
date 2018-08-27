@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.assetinfo.dao.SzlAssetinfoDao">
+    
+	<sql id="szlAssetinfoColumns">
+		a.state AS "state",
+		a.uid AS "uid",
+		a.info AS "info",
+		a.id AS "id",
+		a.tid AS "tid"
+	</sql>
+	
+	<sql id="szlAssetinfoJoins">
+	</sql>
+    
+	<select id="get" resultType="SzlAssetinfo">
+		SELECT 
+			<include refid="szlAssetinfoColumns"/>
+		FROM szl_assetinfo a
+		<include refid="szlAssetinfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="SzlAssetinfo">
+		SELECT 
+			<include refid="szlAssetinfoColumns"/>
+		FROM szl_assetinfo a
+		<include refid="szlAssetinfoJoins"/>
+		<where>
+			
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="SzlAssetinfo">
+		SELECT 
+			<include refid="szlAssetinfoColumns"/>
+		FROM szl_assetinfo a
+		<include refid="szlAssetinfoJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO szl_assetinfo(
+			state,
+			uid,
+			info,
+			id,
+			tid
+		) VALUES (
+			#{state},
+			#{uid},
+			#{info},
+			#{id},
+			#{tid}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE szl_assetinfo SET 	
+			state = #{state},
+			uid = #{uid},
+			info = #{info},
+			tid = #{tid}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM szl_assetinfo
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

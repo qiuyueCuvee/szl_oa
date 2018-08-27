@@ -34,9 +34,9 @@
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>		
 		<c:choose>	
-		<c:when test="${whoami != '系统管理员'}"> 
+		<c:when test="${whoami =='普通用户'}">
 		<div class="control-group">
-				<label class="control-label col-sm-4">
+			<label class="control-label col-sm-4">
 				<span class="required" style="color:red">*</span>申请人: </label>
 			<div class="controls">
 				<form:input path="applicant" htmlEscape="false" maxlength="64" class="input-xlarge form-control required"/>
@@ -71,9 +71,10 @@
 		</c:when>
 		<c:otherwise>
 		<div class="control-group">
-			<label class="control-label">受理人：</label>
+			 <label class="control-label col-sm-4">
+				<span class="required" style="color:red">*</span>受理人: </label>
 			<div class="controls">
-				<form:input path="receiver" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:input path="receiver" htmlEscape="false" maxlength="64" class="input-xlarge form-control required"/>
 			</div>
 		</div>
 		<div class="control-group">
