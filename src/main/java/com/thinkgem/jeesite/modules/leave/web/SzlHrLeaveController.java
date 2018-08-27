@@ -4,8 +4,10 @@
 package com.thinkgem.jeesite.modules.leave.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,10 +27,10 @@ import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.holiday.dao.SzlHrHolidayDao;
-import com.thinkgem.jeesite.modules.holiday.entity.SzlHrHoliday;
 import com.thinkgem.jeesite.modules.holiday.service.SzlHrHolidayService;
 import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
 import com.thinkgem.jeesite.modules.leave.service.SzlHrLeaveService;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 
 /**
@@ -63,6 +65,18 @@ public class SzlHrLeaveController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SzlHrLeave szlHrLeave, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrLeave> page = szlHrLeaveService.findPage(new Page<SzlHrLeave>(request, response), szlHrLeave); 
+		//普通用户只显示该用户创建的条目
+		User user = szlHrLeave.getCurrentUser();
+		if (!user.getName().equals("系统管理员")){
+			List<SzlHrLeave> list = page.getList();
+			List<SzlHrLeave> reslist =new ArrayList<SzlHrLeave>();
+			for(SzlHrLeave obj:list){
+				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+					reslist.add(obj);
+				}	
+			}
+			page.setList(reslist);
+		}
 		model.addAttribute("page", page);
 		return "modules/leave/szlHrLeaveList";
 	}
@@ -107,8 +121,6 @@ public class SzlHrLeaveController extends BaseController {
 		szlHrLeave.setLeaveStatus("2");		
 		szlHrLeave.setStatusReason("该单据已经通过管理员审核！");		
 		szlHrLeaveService.update(szlHrLeave);
-		
-		
 		addMessage(redirectAttributes, "通过请假单成功！");
 		return "redirect:"+Global.getAdminPath()+"/leave/szlHrLeave/check/?repage";
 	}

@@ -3,7 +3,9 @@
  */
 package com.thinkgem.jeesite.modules.overtime.web;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +63,18 @@ public class SzlHrOvertimeController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SzlHrOvertime szlHrOvertime, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrOvertime> page = szlHrOvertimeService.findPage(new Page<SzlHrOvertime>(request, response), szlHrOvertime); 
+		//普通用户只显示该用户创建的条目
+		User user = szlHrOvertime.getCurrentUser();
+		if (!user.getName().equals("系统管理员")){
+			List<SzlHrOvertime> list = page.getList();
+			List<SzlHrOvertime> reslist =new ArrayList<SzlHrOvertime>();
+			for(SzlHrOvertime obj:list){
+				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+					reslist.add(obj);
+				}	
+			}
+			page.setList(reslist);
+		}
 		model.addAttribute("page", page);
 		return "modules/overtime/szlHrOvertimeList";
 	}

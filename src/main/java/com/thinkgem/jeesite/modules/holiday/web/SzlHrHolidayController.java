@@ -3,8 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.holiday.web;
 
-import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
-import com.thinkgem.jeesite.modules.declare.entity.SlzDeclareinfo;
 import com.thinkgem.jeesite.modules.holiday.entity.SzlHrHoliday;
 import com.thinkgem.jeesite.modules.holiday.service.SzlHrHolidayService;
 import com.thinkgem.jeesite.modules.sys.entity.User;
