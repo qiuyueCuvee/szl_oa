@@ -23,6 +23,7 @@ import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrAttence;
 import com.thinkgem.jeesite.modules.hrattence.entity.SzlHrStaff;
 import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
 import com.thinkgem.jeesite.modules.leave.service.SzlHrLeaveService;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 
 /**
  * hrattenceService
@@ -55,6 +56,16 @@ public class SzlHrAttenceService extends CrudService<SzlHrAttenceDao, SzlHrAtten
 	}
 	
 	public List<SzlHrAttence> findAttenceList(SzlHrAttence szlHrAttence){
+		
+	/*	User user = szlHrAttence.getCurrentUser();
+		String deptname = user.getOffice().getName();
+		SzlHrStaff szlHrStaff = new SzlHrStaff();
+		szlHrStaff.setDepartment(deptname);
+		List<SzlHrStaff> list = szlHrStaffService.findList(szlHrStaff);
+		for(SzlHrStaff staff:list) {
+			staff.getNumber();
+		}*/
+		
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.MONTH, -3);
 		c.set(Calendar.DAY_OF_MONTH, 26);
