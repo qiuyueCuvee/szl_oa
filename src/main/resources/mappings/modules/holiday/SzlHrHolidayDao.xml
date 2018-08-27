@@ -117,10 +117,13 @@
 	<select id="findAnnualLeaveNumber" parameterType="java.lang.String" resultType="String">
 		SELECT annual_leave FROM szl_hr_holiday where number=#{number};
 	</select>
-	<select id="updateHoliday" resultType="SzlHrHoliday">
+	<select id="updateShift" resultType="SzlHrHoliday">
 		UPDATE szl_hr_holiday SET shift_leave = #{shiftLeave} WHERE number=#{number};
 	</select>
-	<select id="getUserId"  parameterType="java.lang.String" resultType="String">
-		SELECT id FROM sys_user where no=#{number};
+	<select id="updateAnnual" resultType="SzlHrHoliday">
+		UPDATE szl_hr_holiday SET annual_leave = #{annualLeave} WHERE number=#{number};
+	</select>
+	<select id="getloginName"  parameterType="java.lang.String" resultType="String">
+		SELECT login_name FROM sys_user where no=#{number};
 	</select>
 </mapper>

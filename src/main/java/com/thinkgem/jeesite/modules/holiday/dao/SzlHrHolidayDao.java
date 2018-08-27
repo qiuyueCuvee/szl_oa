@@ -17,6 +17,7 @@ public interface SzlHrHolidayDao extends CrudDao<SzlHrHoliday> {
 	public String findByNumber(String number);
 	public String findShiftLeaveNumber(String number);
 	public String findAnnualLeaveNumber(String number);
-	public String updateHoliday(SzlHrHoliday szlHrHoliday);
-	public String getUserId(String number);
+	public String updateShift(SzlHrHoliday szlHrHoliday);
+	public String updateAnnual(SzlHrHoliday szlHrHoliday);
+	public String getloginName(String number);
 }

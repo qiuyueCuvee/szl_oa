@@ -59,13 +59,10 @@ public class RepairmgtController extends BaseController {
 		Page<Repairmgt> page = repairmgtService.findPage(new Page<Repairmgt>(request, response), repairmgt); 
 		
 		String roleName = usr.getRoleNames();
-		if (usr.getName().equals("系统管理员"))
-		{
+		if (usr.getName().equals("系统管理员")){
 			roleName = roleName.substring(roleName.indexOf(",") + 1);
 		}
-		
-		if (roleName.equals("普通用户"))      //普通用户只显示该用户创建的条目
-		{
+		if (roleName.equals("普通用户")){//普通用户只显示该用户创建的条目
 			List<Repairmgt> list = page.getList();
 			List<Repairmgt> reslist =new ArrayList<Repairmgt>();
 

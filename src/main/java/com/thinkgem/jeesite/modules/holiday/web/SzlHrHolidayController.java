@@ -4,8 +4,8 @@
 package com.thinkgem.jeesite.modules.holiday.web;
 
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,12 +53,13 @@ public class SzlHrHolidayController extends BaseController {
 	public String list(SzlHrHoliday szlHrHoliday, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrHoliday> page = szlHrHolidayService.findPage(new Page<SzlHrHoliday>(request, response), szlHrHoliday); 
 		//普通用户只显示该用户创建的条目
-		User user = szlHrHoliday.getCurrentUser();
-		if (!user.getName().equals("系统管理员")){
+		User usr = szlHrHoliday.getCurrentUser();
+		String roleName = usr.getRoleNames();
+		if (roleName.equals("普通用户")){//普通用户只显示该用户创建的条目
 			List<SzlHrHoliday> list = page.getList();
 			List<SzlHrHoliday> reslist =new ArrayList<SzlHrHoliday>();
-			for(SzlHrHoliday obj:list){
-				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+			for(SzlHrHoliday obj:list) {
+				if(usr.getLoginName().equals(obj.getCreateBy().getId())) {
 					reslist.add(obj);
 				}	
 			}

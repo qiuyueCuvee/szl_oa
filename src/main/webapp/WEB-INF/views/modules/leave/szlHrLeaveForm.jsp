@@ -78,7 +78,7 @@
 		</div>
 		<div class="form-actions">
 			<shiro:hasPermission name="leave:szlHrLeave:edit">
-			<input id="btnSubmit" class="btn btn-primary" type="button" onclick="getHours()" value="提 交"/>&nbsp;</shiro:hasPermission>
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="提 交"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
 	</form:form>
@@ -101,8 +101,7 @@ $(document).ready(function() {
 		}
 	});
 });
-function getHours() {
-	
+/* function getHours() {
 	var number=$("#number").val();
 	$.ajax({
 		 type : "GET",
@@ -114,36 +113,7 @@ function getHours() {
 				 //$("#inputForm").submit();
 			 }
 	});
-}
-/*
-//计算两个时间相差了几个小时
-function getIntervalHour(startTime,endTime) {
-	var StartTime = new Date(startTime);//将字符串转化为时间
-	var EndTime = new Date(endTime);
-    var ms = EndTime.getTime() - StartTime.getTime();
-    if (ms < 0){ 
-    	return 0;
-    }else{
-    	var hours= Math.floor(ms/1000/60/60);
-	    return hours;
-    } 
-}
-//开始时间发生变化
-$("#startTime").change(function(){
-	 var startTime=$("#startTime").val();
-	 var endTime=$("#endTime").val();
-	 var leaveHours=getIntervalHour(startTime, endTime);
-	 //写入工作时长
-	 $("#leaveHours").val(leaveHours); 
-});
-//结束时间发生变化
-$("#endTime").change(function(){
-	var startTime=$("#startTime").val();
-	var endTime=$("#endTime").val();
-	var leaveHours=getIntervalHour(startTime, endTime);
-	//写入工作时长
-	$("#leaveHours").val(leaveHours); 
-}); */
+} */
 </script>
 </body>
 </html>

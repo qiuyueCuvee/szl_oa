@@ -3,8 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.declare.web;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.text.SimpleDateFormat;
 
@@ -57,12 +57,13 @@ public class SlzDeclareinfoController extends BaseController {
 	public String list(SlzDeclareinfo slzDeclareinfo, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SlzDeclareinfo> page = slzDeclareinfoService.findPage(new Page<SlzDeclareinfo>(request, response), slzDeclareinfo); 
 		//普通用户只显示该用户创建的条目
-		User user = slzDeclareinfo.getCurrentUser();
-		if (!user.getName().equals("系统管理员")){
+		User usr = slzDeclareinfo.getCurrentUser();
+		String roleName = usr.getRoleNames();
+		if (roleName.equals("普通用户")){//普通用户只显示该用户创建的条目
 			List<SlzDeclareinfo> list = page.getList();
 			List<SlzDeclareinfo> reslist =new ArrayList<SlzDeclareinfo>();
-			for(SlzDeclareinfo obj:list){
-				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+			for(SlzDeclareinfo obj:list) {
+				if(usr.getLoginName().equals(obj.getCreateBy().getId())) {
 					reslist.add(obj);
 				}	
 			}

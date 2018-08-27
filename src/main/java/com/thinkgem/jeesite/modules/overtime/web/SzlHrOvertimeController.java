@@ -3,8 +3,8 @@
  */
 package com.thinkgem.jeesite.modules.overtime.web;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.text.SimpleDateFormat;
 
@@ -64,12 +64,13 @@ public class SzlHrOvertimeController extends BaseController {
 	public String list(SzlHrOvertime szlHrOvertime, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrOvertime> page = szlHrOvertimeService.findPage(new Page<SzlHrOvertime>(request, response), szlHrOvertime); 
 		//普通用户只显示该用户创建的条目
-		User user = szlHrOvertime.getCurrentUser();
-		if (!user.getName().equals("系统管理员")){
+		User usr = szlHrOvertime.getCurrentUser();
+		String roleName = usr.getRoleNames();
+		if (roleName.equals("普通用户")){//普通用户只显示该用户创建的条目
 			List<SzlHrOvertime> list = page.getList();
 			List<SzlHrOvertime> reslist =new ArrayList<SzlHrOvertime>();
-			for(SzlHrOvertime obj:list){
-				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+			for(SzlHrOvertime obj:list) {
+				if(usr.getLoginName().equals(obj.getCreateBy().getId())) {
 					reslist.add(obj);
 				}	
 			}
@@ -129,9 +130,10 @@ public class SzlHrOvertimeController extends BaseController {
 		//判断该员工信息是否存在
 		if(ifExist==null || "".equals(ifExist)) {
 			//不存在则添加
-			//获取本人的userid
-			String userid = szlHrHolidayDao.getUserId(number);
-			User olduser=new User(userid);
+			//获取本人的loginname
+			String loginName = szlHrHolidayDao.getloginName(number);
+			User olduser=new User();
+			olduser.setLoginName(loginName);
 			szlHrHoliday.setCreateBy(olduser);
 			//默认年假1天
 			szlHrHoliday.setAnnualLeave("1");
@@ -145,7 +147,7 @@ public class SzlHrOvertimeController extends BaseController {
 			int now=oldLeave+newLeave;
 			String shiftLeave=now+"";
 			szlHrHoliday.setShiftLeave(shiftLeave);
-			szlHrHolidayDao.updateHoliday(szlHrHoliday);
+			szlHrHolidayDao.updateShift(szlHrHoliday);
 		}
 		addMessage(redirectAttributes, "通过加班单成功！");
 		return "redirect:"+Global.getAdminPath()+"/overtime/szlHrOvertime/check/?repage";

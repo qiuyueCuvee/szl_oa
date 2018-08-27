@@ -6,9 +6,7 @@ package com.thinkgem.jeesite.modules.leave.web;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +25,7 @@ import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.modules.holiday.dao.SzlHrHolidayDao;
+import com.thinkgem.jeesite.modules.holiday.entity.SzlHrHoliday;
 import com.thinkgem.jeesite.modules.holiday.service.SzlHrHolidayService;
 import com.thinkgem.jeesite.modules.leave.entity.SzlHrLeave;
 import com.thinkgem.jeesite.modules.leave.service.SzlHrLeaveService;
@@ -66,12 +65,13 @@ public class SzlHrLeaveController extends BaseController {
 	public String list(SzlHrLeave szlHrLeave, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrLeave> page = szlHrLeaveService.findPage(new Page<SzlHrLeave>(request, response), szlHrLeave); 
 		//普通用户只显示该用户创建的条目
-		User user = szlHrLeave.getCurrentUser();
-		if (!user.getName().equals("系统管理员")){
+		User usr = szlHrLeave.getCurrentUser();
+		String roleName = usr.getRoleNames();
+		if (roleName.equals("普通用户")){//普通用户只显示该用户创建的条目
 			List<SzlHrLeave> list = page.getList();
 			List<SzlHrLeave> reslist =new ArrayList<SzlHrLeave>();
-			for(SzlHrLeave obj:list){
-				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+			for(SzlHrLeave obj:list) {
+				if(usr.getLoginName().equals(obj.getCreateBy().getId())) {
 					reslist.add(obj);
 				}	
 			}
@@ -109,19 +109,111 @@ public class SzlHrLeaveController extends BaseController {
 		if (!beanValidator(model, szlHrLeave)){
 			return form(szlHrLeave, model);
 		}
-		szlHrLeave.setLeaveStatus("1");		
-		szlHrLeave.setStatusReason("该请假单已经生成，等待领导审核！");
-		addMessage(redirectAttributes, "保存请假信息成功");
+		String number=szlHrLeave.getNumber();
+		String leaveHours1=szlHrLeave.getLeaveHours();
+		String type=szlHrLeave.getLeaveType();
+		String h1=szlHrHolidayDao.findShiftLeaveNumber(number);
+		String h2=szlHrHolidayDao.findAnnualLeaveNumber(number);
+		int shiftHours=0;
+		int yearHours=0;
+		int leaveHours=0;
+		if(!"".equals(h1) && h1!=null) {
+			shiftHours=Integer.parseInt(h1);//剩余倒休时长
+		}
+		if(!"".equals(h2) && h2!=null) {
+			yearHours=Integer.parseInt(h2);//剩余年假时长
+		}
+		if(!"".equals(leaveHours1) && leaveHours1!=null) {
+			leaveHours=Integer.parseInt(leaveHours1);//请假时长
+		}
+		if("1".equals(type)){
+			//倒休
+			if(leaveHours<=shiftHours) {
+				szlHrLeave.setLeaveStatus("1");	
+				szlHrLeave.setStatusReason("该请假单已经生成，等待领导审核！");
+				szlHrLeaveService.save(szlHrLeave);
+				addMessage(redirectAttributes, "保存请假信息(倒休)成功");
+			}else if(leaveHours>shiftHours){
+				addMessage(redirectAttributes, "保存请假信息(倒休)失败,剩余倒休时长不足，剩余时长为："+shiftHours+"小时！");
+			}else {
+				addMessage(redirectAttributes, "保存请假信息(倒休)失败！");
+			}
+		}else if("2".equals(type)) {
+			//年假
+			if(leaveHours<=yearHours) {
+				szlHrLeave.setLeaveStatus("1");	
+				szlHrLeave.setStatusReason("该请假单已经生成，等待领导审核！");
+				szlHrLeaveService.save(szlHrLeave);
+				addMessage(redirectAttributes, "保存请假信息(年假)成功");
+			}else if(leaveHours>yearHours){
+				addMessage(redirectAttributes, "保存请假信息(年假)失败,剩余年假时长不足，剩余时长为："+yearHours+"小时！");
+			}else {
+				addMessage(redirectAttributes, "保存请假信息(年假)失败！");
+			}
+		}else {
+			szlHrLeave.setLeaveStatus("1");	
+			szlHrLeave.setStatusReason("该请假单已经生成，等待领导审核！");
+			szlHrLeaveService.save(szlHrLeave);
+			addMessage(redirectAttributes, "保存请假信息成功");
+		}
 		return "redirect:"+Global.getAdminPath()+"/leave/szlHrLeave/?repage";
 	}
 	
 	@RequiresPermissions("leave:szlHrLeave:check")
 	@RequestMapping(value = "pass")
 	public String pass(SzlHrLeave szlHrLeave, RedirectAttributes redirectAttributes) {
-		szlHrLeave.setLeaveStatus("2");		
-		szlHrLeave.setStatusReason("该单据已经通过管理员审核！");		
-		szlHrLeaveService.update(szlHrLeave);
-		addMessage(redirectAttributes, "通过请假单成功！");
+		String number=szlHrLeave.getNumber();
+		String leaveHours1=szlHrLeave.getLeaveHours();
+		String type=szlHrLeave.getLeaveType();
+		String h1=szlHrHolidayDao.findShiftLeaveNumber(number);
+		String h2=szlHrHolidayDao.findAnnualLeaveNumber(number);
+		int shiftHours=0;
+		int yearHours=0;
+		int leaveHours=0;
+		if(!"".equals(h1) && h1!=null) {
+			shiftHours=Integer.parseInt(h1);//剩余倒休时长
+		}
+		if(!"".equals(h2) && h2!=null) {
+			yearHours=Integer.parseInt(h2);//剩余年假时长
+		}
+		if(!"".equals(leaveHours1) && leaveHours1!=null) {
+			leaveHours=Integer.parseInt(leaveHours1);//请假时长
+		}
+		//holiday扣去相应的小时
+		SzlHrHoliday szlHrHoliday=new SzlHrHoliday();
+		szlHrHoliday.setNumber(number);
+		if("1".equals(type)){
+			if(leaveHours<=shiftHours) {
+				int now=shiftHours-leaveHours;
+				String s = now+"";
+				szlHrHoliday.setShiftLeave(s);
+				szlHrHolidayDao.updateShift(szlHrHoliday);
+				szlHrLeave.setLeaveStatus("2");		
+				szlHrLeave.setStatusReason("该单据已经通过管理员审核！");		
+				szlHrLeaveService.update(szlHrLeave);
+				addMessage(redirectAttributes, "通过请假单(倒休)成功！");
+			}else {
+				addMessage(redirectAttributes, "该员工的剩余倒休时长不足，剩余："+shiftHours+"小时！");
+			}
+		}else if("2".equals(type)){
+			if(leaveHours<=yearHours) {
+				int now=yearHours-leaveHours;
+				String a = now+"";
+				szlHrHoliday.setAnnualLeave(a);
+				szlHrHolidayDao.updateAnnual(szlHrHoliday);
+				szlHrLeave.setLeaveStatus("2");		
+				szlHrLeave.setStatusReason("该单据已经通过管理员审核！");		
+				szlHrLeaveService.update(szlHrLeave);
+				addMessage(redirectAttributes, "通过请假单(年假)成功！");
+			}else {
+				addMessage(redirectAttributes, "该员工的剩余年假时长不足，剩余："+yearHours+"小时！");
+			}
+		}else {
+			szlHrLeave.setLeaveStatus("2");		
+			szlHrLeave.setStatusReason("该单据已经通过管理员审核！");		
+			szlHrLeaveService.update(szlHrLeave);
+			addMessage(redirectAttributes, "通过请假单成功！");
+		}
 		return "redirect:"+Global.getAdminPath()+"/leave/szlHrLeave/check/?repage";
 	}
 	
@@ -147,25 +239,6 @@ public class SzlHrLeaveController extends BaseController {
 		addMessage(redirectAttributes, "删除请假信息成功");
 		return "redirect:"+Global.getAdminPath()+"/leave/szlHrLeave/?repage";
 	}
-	
 
-	@RequestMapping(value = "getHours")
-	public Map<String, Object> getHours(HttpServletRequest requset,HttpServletResponse response) {
-		String number=requset.getParameter("number");
-		String h1=szlHrHolidayDao.findShiftLeaveNumber(number);
-		String h2=szlHrHolidayDao.findAnnualLeaveNumber(number);
-		int shiftHours=0;
-		int yearHours=0;
-		if(!"".equals(h1)) {
-			shiftHours=Integer.parseInt(h1);//剩余倒休时长
-		}else if(!"".equals(h2)) {
-			yearHours=Integer.parseInt(h2);//剩余年假时长
-		}
-		Map<String, Object> map=new HashMap<String, Object>();
-		map.put("number", number);
-		map.put("shiftHours", shiftHours);
-		map.put("yearHours", yearHours);
-		return map;
-	}
 
 }
