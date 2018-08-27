@@ -4,6 +4,10 @@
 package com.thinkgem.jeesite.modules.holiday.web;
 
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -16,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.web.BaseController;
 import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.modules.declare.entity.SlzDeclareinfo;
 import com.thinkgem.jeesite.modules.holiday.entity.SzlHrHoliday;
 import com.thinkgem.jeesite.modules.holiday.service.SzlHrHolidayService;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 
 /**
  * holidayController
@@ -47,8 +53,18 @@ public class SzlHrHolidayController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(SzlHrHoliday szlHrHoliday, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<SzlHrHoliday> page = szlHrHolidayService.findPage(new Page<SzlHrHoliday>(request, response), szlHrHoliday); 
-		
-		
+		//普通用户只显示该用户创建的条目
+		User user = szlHrHoliday.getCurrentUser();
+		if (!user.getName().equals("系统管理员")){
+			List<SzlHrHoliday> list = page.getList();
+			List<SzlHrHoliday> reslist =new ArrayList<SzlHrHoliday>();
+			for(SzlHrHoliday obj:list){
+				if(user.getLoginName().equals(obj.getCreateBy().getId())){
+					reslist.add(obj);
+				}	
+			}
+			page.setList(reslist);
+		}
 		model.addAttribute("page", page);
 		return "modules/holiday/szlHrHolidayList";
 	}
